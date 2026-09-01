@@ -24,8 +24,15 @@ class ProfileTests(TestCase):
 
     def test_navigation_and_home_change_with_authentication_state(self):
         response = self.client.get(reverse("core:home"))
+        login_url = reverse("accounts:login")
+        register_url = reverse("accounts:register")
         self.assertContains(response, "Jack In")
+        self.assertContains(response, f'href="{login_url}"', count=1)
+        self.assertNotContains(response, "Jack In <span>Próximamente")
+        self.assertContains(response, f'href="{register_url}">Jack In // Crear cuenta')
         self.client.force_login(self.user)
         response = self.client.get(reverse("core:home"))
         self.assertContains(response, "@profile-runner")
         self.assertContains(response, "Jack Out")
+        self.assertContains(response, f'href="{reverse("accounts:profile")}"')
+        self.assertNotContains(response, f'href="{login_url}"')
