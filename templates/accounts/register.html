@@ -1,0 +1,3 @@
+{% extends "base.html" %}
+{% block title %}Crear identidad | Jorge CyberpunkTCG{% endblock %}
+{% block content %}<section class="auth-shell"><div class="auth-panel"><p class="auth-kicker">IDENTITY PROTOCOL // 01</p><h1>CREAR IDENTIDAD</h1><p>Crea tu cuenta para entrar a la red de Jorge CyberpunkTCG.</p><form class="auth-form" method="post">{% csrf_token %}{% include "accounts/_form_fields.html" with form=form %}<button class="button" type="submit">Crear cuenta</button></form><div class="auth-links"><a href="{% url 'accounts:login' %}">¿Ya tienes cuenta? Iniciar sesión</a></div></div></section>{% endblock %}

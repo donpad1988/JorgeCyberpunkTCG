@@ -8,6 +8,7 @@
     <title>{% block title %}Jorge CyberpunkTCG{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    <link rel="stylesheet" href="{% static 'css/accounts.css' %}">
     {% block extra_css %}{% endblock %}
   </head>
   <body>
@@ -18,7 +19,7 @@
         <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation"><span class="sr-only">Abrir menú de navegación</span><span aria-hidden="true">☰</span></button>
         <div class="nav-menu" id="primary-navigation">
           <ul class="nav-links"><li><a aria-current="page" href="{% url 'core:home' %}">Inicio</a></li><li><span>Guías <small>Próximamente</small></span></li><li><span>Estrategias <small>Próximamente</small></span></li><li><span>Choomdex <small>Próximamente</small></span></li><li><span>Mazos <small>Próximamente</small></span></li><li><span>Comunidad <small>Próximamente</small></span></li></ul>
-          <div class="nav-actions"><span class="nav-pending">YouTube <small>En preparación</small></span><button class="button button--compact" type="button" disabled>Jack In <span>Próximamente</span></button></div>
+          <div class="nav-actions"><span class="nav-pending">YouTube <small>En preparación</small></span>{% if user.is_authenticated %}<a class="nav-user" href="{% url 'accounts:profile' %}">@{{ user.username }}<small>Mi perfil</small></a><form class="nav-logout" method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}<button class="button button--compact button--ghost" type="submit">Jack Out <span>Cerrar sesión</span></button></form>{% else %}<a class="button button--compact" href="{% url 'accounts:login' %}">Jack In <span>Iniciar sesión</span></a>{% endif %}</div>
         </div>
       </nav>
     </header>
