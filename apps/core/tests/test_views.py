@@ -18,9 +18,9 @@ class HomeViewTests(TestCase):
         self.assertContains(response, "Choomdex Hispano")
         self.assertContains(response, "Combat Terminal")
 
-    def test_home_only_links_to_available_internal_routes(self):
+    def test_home_links_only_to_available_internal_routes(self):
         response = self.client.get(reverse("core:home"))
 
-        self.assertNotContains(response, 'href="/guias/')
-        self.assertNotContains(response, 'href="/estrategias/')
+        self.assertContains(response, 'href="/guias/')
+        self.assertContains(response, 'href="/estrategias/')
         self.assertNotContains(response, 'href="/choomdex/')
