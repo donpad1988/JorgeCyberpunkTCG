@@ -2,5 +2,5 @@ from django.shortcuts import render
 
 
 def home(request):
-    """Minimal health page; visual work belongs to Phase 2."""
+    """Render the public tactical cyberdeck landing page."""
     return render(request, "core/home.html")

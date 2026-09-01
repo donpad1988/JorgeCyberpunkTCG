@@ -8,7 +8,7 @@ Cada fase se cierra con alcance definido, pruebas proporcionales, documentación
 |---|---|---|
 | 0 | Constitución, arquitectura y planificación | Documentos aprobados; no hay código Django. |
 | 1 | Fundación técnica Django — **completada** | Proyecto mínimo, settings por entorno, usuario personalizado, pruebas y Git ignorando secretos. |
-| 2 | Sistema visual y Home | Design tokens originales, layout responsive/accesible y Home basada en contenido propio. |
+| 2 | Sistema visual y Home — **completada** | Design tokens originales, layout responsive/accesible y Home basada en contenido propio. |
 | 3 | Usuarios y autenticación | Registro, acceso, recuperación y perfil base con permisos verificados. |
 | 4 | Guías y estrategias | Modelo editorial, categorías/niveles, slugs, administración y páginas indexables. |
 | 5 | Integración editorial con YouTube | Metadatos propios y relaciones con guías sin depender de embeds ni API prematura. |

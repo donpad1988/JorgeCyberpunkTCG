@@ -1,11 +1,30 @@
+{% load static %}
 <!doctype html>
 <html lang="es">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}JorgeCyberpunkTCG{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Guías, estrategias y comunidad para jugadores de Cyberpunk TCG.{% endblock %}">
+    <title>{% block title %}Jorge CyberpunkTCG{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    {% block extra_css %}{% endblock %}
   </head>
   <body>
-    <main>{% block content %}{% endblock %}</main>
+    <a class="skip-link" href="#main-content">Saltar al contenido principal</a>
+    <header class="site-header">
+      <nav class="site-nav container" aria-label="Navegación principal">
+        <a class="brand" href="{% url 'core:home' %}" aria-label="Jorge CyberpunkTCG, inicio"><span class="brand-mark" aria-hidden="true">J//C</span><span>JORGE <strong>CYBERPUNKTCG</strong></span></a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation"><span class="sr-only">Abrir menú de navegación</span><span aria-hidden="true">☰</span></button>
+        <div class="nav-menu" id="primary-navigation">
+          <ul class="nav-links"><li><a aria-current="page" href="{% url 'core:home' %}">Inicio</a></li><li><span>Guías <small>Próximamente</small></span></li><li><span>Estrategias <small>Próximamente</small></span></li><li><span>Choomdex <small>Próximamente</small></span></li><li><span>Mazos <small>Próximamente</small></span></li><li><span>Comunidad <small>Próximamente</small></span></li></ul>
+          <div class="nav-actions"><span class="nav-pending">YouTube <small>En preparación</small></span><button class="button button--compact" type="button" disabled>Jack In <span>Próximamente</span></button></div>
+        </div>
+      </nav>
+    </header>
+    <main id="main-content">{% block content %}{% endblock %}</main>
+    <footer class="site-footer"><div class="container footer-grid"><div><p class="brand footer-brand">JORGE <strong>CYBERPUNKTCG</strong></p><p>Un cyberdeck táctico independiente para la comunidad hispana de Cyberpunk TCG.</p></div><nav aria-label="Navegación del pie"><a href="{% url 'core:home' %}">Inicio</a><span>Guías · Próximamente</span><span>Comunidad · Próximamente</span></nav><p class="system-status"><span aria-hidden="true"></span>SYSTEM STATUS // ONLINE</p></div><div class="container footer-note">Sitio de comunidad independiente, no afiliado oficialmente. Los contenidos y herramientas se incorporarán de forma progresiva.</div></footer>
+    <script src="{% static 'js/main.js' %}" defer></script>
+    {% block extra_js %}{% endblock %}
   </body>
 </html>
