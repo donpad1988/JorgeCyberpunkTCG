@@ -1,0 +1,24 @@
+# Python and virtual environments
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django and local configuration
+.env
+db.sqlite3
+media/
+staticfiles/
+
+# Tests and tooling
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Windows and editors
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
+*.swp
+*.tmp
