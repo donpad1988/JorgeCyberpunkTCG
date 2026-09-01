@@ -24,3 +24,12 @@ class HomeViewTests(TestCase):
         self.assertContains(response, 'href="/guias/')
         self.assertContains(response, 'href="/estrategias/')
         self.assertNotContains(response, 'href="/choomdex/')
+
+    def test_footer_links_to_editorial_modules_without_future_labels(self):
+        response = self.client.get(reverse("core:home"))
+
+        self.assertContains(response, f'href="{reverse("content:guide_list")}">Guías</a>')
+        self.assertContains(response, f'href="{reverse("content:strategy_list")}">Estrategias</a>')
+        self.assertNotContains(response, "Guías · Próximamente")
+        self.assertNotContains(response, "Estrategias · Próximamente")
+        self.assertContains(response, "Comunidad · Próximamente")
