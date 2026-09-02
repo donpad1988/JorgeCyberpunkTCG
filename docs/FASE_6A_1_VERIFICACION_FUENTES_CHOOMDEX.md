@@ -19,3 +19,7 @@ RAM está verificada como límite por color aportado por Legends; reglas de cons
 Card: nombre, slug, Set, estado, procedencia, timestamps y CardType; opcionales verificados según tipo: coste, texto, RAM, color, poder y número flexible de texto. Set: nombre, slug, descripción/activo/procedencia; código, fecha y conteo sólo si se verifican. Rareza, subtipo, facción, formato de collector number, traducciones, imágenes y CardPrinting siguen pendientes/pospuestos. No hay evidencia suficiente para CardPrinting en 6B.
 
 6B usará `source_name`, `source_url`, `verified_at`, `verification_notes` por registro. Imágenes: placeholder propio; reglas: política conservadora; mercado: separado y pospuesto. **FASE 6B — GO**, sólo para el contrato anterior, catálogo vacío y carga manual revisada.
+
+## Actualización 6C.1 — evidencia de printings
+
+Las fichas oficiales de Judy Álvarez — Braindance Maestro, Field Operator, Take Control y Sandevistan muestran múltiples printings oficiales. La evidencia respalda una necesidad futura de reevaluar la separación `Card` / `CardPrinting` antes de cualquier carga masiva. `CardPrinting` permanece pospuesto: el dataset piloto sólo documenta una impresión de referencia por carta y no implementa un modelo nuevo.

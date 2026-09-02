@@ -15,6 +15,7 @@ Cada fase se cierra con alcance definido, pruebas proporcionales, documentación
 | 6A | Diseño y auditoría Choomdex — **completada** | Arquitectura, política de fuentes y MVP definidos sin implementar datos. |
 | 6A.1 | Verificación de fuentes Choomdex — **completada** | Contrato 6B refinado con fuentes oficiales; sin implementación. |
 | 6B | MVP Choomdex — **completada** | Catálogo y administración vacíos con datos verificados manualmente. |
+| 6C.1 | Dataset piloto Choomdex — **completada** | Un Set y cuatro Cards documentados desde fuentes oficiales; sin carga automática de datos. |
 | 6 | Choomdex | Catálogo con procedencia de datos, filtros y estados explícitos de datos ausentes. |
 | 7 | Deck Builder | Mazos, restricciones configurables y validación servidor. |
 | 8 | RAM Budget Analyzer y herramientas presenciales | Analizador de RAM separado de Eddies y terminal móvil de partida. |
