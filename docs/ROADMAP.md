@@ -17,6 +17,7 @@ Cada fase se cierra con alcance definido, pruebas proporcionales, documentación
 | 6B | MVP Choomdex — **completada** | Catálogo y administración vacíos con datos verificados manualmente. |
 | 6C.1 | Dataset piloto Choomdex — **completada** | Un Set y cuatro Cards documentados desde fuentes oficiales; sin carga automática de datos. |
 | 6C.3 | Presentación táctica Choomdex — **completada** | Grid HUD, ficha táctica y atributos condicionales sin alterar datos ni modelo. |
+| 6D.1 | Arquitectura Card vs CardPrinting — **completada** | Decisión trazable para identidad, impresión y Set; migración condicionada a gates de verificación. |
 | 6 | Choomdex | Catálogo con procedencia de datos, filtros y estados explícitos de datos ausentes. |
 | 7 | Deck Builder | Mazos, restricciones configurables y validación servidor. |
 | 8 | RAM Budget Analyzer y herramientas presenciales | Analizador de RAM separado de Eddies y terminal móvil de partida. |
