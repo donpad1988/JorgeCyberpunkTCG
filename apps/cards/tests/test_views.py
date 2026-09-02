@@ -1,19 +1,41 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from apps.cards.models import Card, Set
+from apps.cards.models import Card, CardPrinting, Set
 
 
 class CardsViewTests(TestCase):
-    def create_card(self, name, *, card_set=None, card_type=Card.CardType.LEGEND, status=Card.Status.PUBLISHED, collector_number="", **kwargs):
-        return Card.objects.create(
-            name=name,
+    printing_fields = {
+        "collector_number",
+        "cost",
+        "ram",
+        "power",
+        "printing_label",
+        "source_name",
+        "source_url",
+        "verified_at",
+        "verification_notes",
+    }
+
+    def create_card(
+        self,
+        name,
+        *,
+        card_set=None,
+        card_type=Card.CardType.LEGEND,
+        status=Card.Status.PUBLISHED,
+        primary=True,
+        **kwargs,
+    ):
+        printed = {key: kwargs.pop(key) for key in tuple(kwargs) if key in self.printing_fields}
+        card = Card.objects.create(name=name, card_type=card_type, status=status, **kwargs)
+        CardPrinting.objects.create(
+            card=card,
             set=card_set or self.active_set,
-            card_type=card_type,
-            status=status,
-            collector_number=collector_number,
-            **kwargs,
+            is_primary=primary,
+            **printed,
         )
+        return card
 
     def setUp(self):
         self.active_set = Set.objects.create(name="Active Set")
@@ -31,6 +53,7 @@ class CardsViewTests(TestCase):
         draft = self.create_card("Draft card", status=Card.Status.DRAFT)
         reviewed = self.create_card("Reviewed card", status=Card.Status.REVIEWED)
         inactive = self.create_card("Inactive set card", card_set=self.inactive_set)
+        no_primary = self.create_card("No primary card", primary=False)
 
         response = self.client.get(reverse("cards:catalog"))
 
@@ -38,6 +61,7 @@ class CardsViewTests(TestCase):
         self.assertNotContains(response, draft.name)
         self.assertNotContains(response, reviewed.name)
         self.assertNotContains(response, inactive.name)
+        self.assertNotContains(response, no_primary.name)
 
     def test_public_card_detail_is_available_and_non_public_cards_are_hidden(self):
         published = self.create_card("Published detail")
@@ -51,7 +75,7 @@ class CardsViewTests(TestCase):
         self.assertEqual(self.client.get(reverse("cards:detail", args=[inactive.slug])).status_code, 404)
         self.assertEqual(self.client.get(reverse("cards:detail", args=["missing-card"])).status_code, 404)
 
-    def test_search_finds_name_and_collector_number_without_leaking_private_cards(self):
+    def test_search_finds_name_and_primary_collector_number_without_leaking_private_cards(self):
         named = self.create_card("Chrome Runner", collector_number="C-001")
         numbered = self.create_card("Silent Card", collector_number="R-404")
         draft = self.create_card("Draft Chrome", status=Card.Status.DRAFT, collector_number="D-001")
@@ -69,9 +93,27 @@ class CardsViewTests(TestCase):
         self.assertContains(number_response, numbered.name)
         self.assertContains(empty_response, "Base táctica preparada.")
 
-    def test_catalog_filters_by_set_and_card_type(self):
+    def test_search_finds_a_secondary_printing_but_catalog_renders_primary_data(self):
+        card = self.create_card("Multi-print card", collector_number="P-001", cost=1)
+        CardPrinting.objects.create(
+            card=card,
+            set=self.other_set,
+            collector_number="S-999",
+            cost=9,
+            is_primary=False,
+        )
+
+        response = self.client.get(reverse("cards:catalog"), {"q": "S-999"})
+
+        self.assertContains(response, card.name)
+        self.assertContains(response, "#P-001")
+        self.assertNotContains(response, "#S-999")
+
+    def test_catalog_filters_by_printing_set_and_card_type(self):
         target = self.create_card("Legend target", card_type=Card.CardType.LEGEND)
-        other_set_card = self.create_card("Other set target", card_set=self.other_set, card_type=Card.CardType.LEGEND)
+        other_set_card = self.create_card(
+            "Other set target", card_set=self.other_set, card_type=Card.CardType.LEGEND
+        )
         other_type = self.create_card("Unit target", card_type=Card.CardType.UNIT)
 
         set_response = self.client.get(reverse("cards:catalog"), {"set": self.active_set.slug})
@@ -90,10 +132,7 @@ class CardsViewTests(TestCase):
         self.assertNotContains(combined_response, other_type.name)
 
     def test_catalog_supports_every_card_type_and_invalid_types_are_safe(self):
-        cards = {
-            card_type: self.create_card(f"{card_type} card", card_type=card_type)
-            for card_type in Card.CardType.values
-        }
+        cards = {card_type: self.create_card(f"{card_type} card", card_type=card_type) for card_type in Card.CardType.values}
 
         for card_type, card in cards.items():
             with self.subTest(card_type=card_type):
@@ -109,18 +148,21 @@ class CardsViewTests(TestCase):
 
         self.assertNotContains(response, hidden.name)
 
-    def test_catalog_paginates_public_cards_at_twenty_four_per_page(self):
+    def test_catalog_paginates_logical_cards_at_twenty_four_per_page_and_preserves_filters(self):
         for index in range(25):
-            self.create_card(f"Catalog card {index:02}")
+            self.create_card(f"Catalog card {index:02}", collector_number=f"C-{index:02}")
 
-        first_page = self.client.get(reverse("cards:catalog"))
-        second_page = self.client.get(reverse("cards:catalog"), {"page": 2})
+        first_page = self.client.get(reverse("cards:catalog"), {"q": "Catalog", "type": "LEGEND"})
+        second_page = self.client.get(
+            reverse("cards:catalog"), {"q": "Catalog", "type": "LEGEND", "page": 2}
+        )
 
         self.assertEqual(first_page.context["page_obj"].paginator.per_page, 24)
         self.assertEqual(first_page.context["page_obj"].paginator.num_pages, 2)
         self.assertContains(second_page, "Catalog card 24")
+        self.assertContains(first_page, "q=Catalog&amp;set=&amp;type=LEGEND&amp;page=2")
 
-    def test_catalog_renders_a_tactical_card_with_available_attributes_and_detail_link(self):
+    def test_catalog_renders_primary_tactical_attributes_and_detail_link(self):
         card = self.create_card(
             "Tactical unit",
             card_type=Card.CardType.UNIT,
@@ -141,7 +183,7 @@ class CardsViewTests(TestCase):
         self.assertContains(response, "POWER")
         self.assertContains(response, reverse("cards:detail", args=[card.slug]))
 
-    def test_catalog_omits_empty_attributes(self):
+    def test_catalog_omits_empty_primary_attributes(self):
         self.create_card("Minimal legend", collector_number="", cost=None, ram=None, power=None)
 
         response = self.client.get(reverse("cards:catalog"))
@@ -151,7 +193,16 @@ class CardsViewTests(TestCase):
         self.assertNotContains(response, "RAM</dt><dd>")
         self.assertNotContains(response, "POWER</dt><dd>")
 
-    def test_detail_renders_tactical_data_omits_empty_sections_and_uses_safe_source_link(self):
+    def test_catalog_prefetches_primary_printings_without_per_card_queries(self):
+        for index in range(3):
+            self.create_card(f"Prefetched card {index}", collector_number=f"P-{index}")
+
+        with self.assertNumQueries(4):
+            response = self.client.get(reverse("cards:catalog"))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_detail_renders_primary_tactical_data_and_safe_printing_source_link(self):
         card = self.create_card(
             "Verified program",
             card_type=Card.CardType.PROGRAM,
