@@ -119,3 +119,61 @@ class CardsViewTests(TestCase):
         self.assertEqual(first_page.context["page_obj"].paginator.per_page, 24)
         self.assertEqual(first_page.context["page_obj"].paginator.num_pages, 2)
         self.assertContains(second_page, "Catalog card 24")
+
+    def test_catalog_renders_a_tactical_card_with_available_attributes_and_detail_link(self):
+        card = self.create_card(
+            "Tactical unit",
+            card_type=Card.CardType.UNIT,
+            collector_number="078",
+            cost=3,
+            ram=2,
+            power=2,
+        )
+
+        response = self.client.get(reverse("cards:catalog"))
+
+        self.assertContains(response, "UNIT")
+        self.assertContains(response, card.name)
+        self.assertContains(response, self.active_set.name)
+        self.assertContains(response, "#078")
+        self.assertContains(response, "COST")
+        self.assertContains(response, "RAM")
+        self.assertContains(response, "POWER")
+        self.assertContains(response, reverse("cards:detail", args=[card.slug]))
+
+    def test_catalog_omits_empty_attributes(self):
+        self.create_card("Minimal legend", collector_number="", cost=None, ram=None, power=None)
+
+        response = self.client.get(reverse("cards:catalog"))
+
+        self.assertNotContains(response, "COLLECTOR</dt><dd>#")
+        self.assertNotContains(response, "COST</dt><dd>")
+        self.assertNotContains(response, "RAM</dt><dd>")
+        self.assertNotContains(response, "POWER</dt><dd>")
+
+    def test_detail_renders_tactical_data_omits_empty_sections_and_uses_safe_source_link(self):
+        card = self.create_card(
+            "Verified program",
+            card_type=Card.CardType.PROGRAM,
+            collector_number="103",
+            cost=2,
+            ram=2,
+            power=None,
+            source_name="Official Database",
+            source_url="https://example.com/card/verified-program",
+            rules_text="",
+        )
+
+        response = self.client.get(reverse("cards:detail", args=[card.slug]))
+
+        self.assertContains(response, "CHOOMDEX // CARD FILE")
+        self.assertContains(response, "PROGRAM")
+        self.assertContains(response, "#103")
+        self.assertContains(response, "COST")
+        self.assertContains(response, "RAM")
+        self.assertNotContains(response, "POWER</dt><dd>")
+        self.assertNotContains(response, "Rules text")
+        self.assertContains(
+            response,
+            'href="https://example.com/card/verified-program" target="_blank" rel="noopener noreferrer"',
+        )
