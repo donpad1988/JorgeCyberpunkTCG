@@ -21,6 +21,7 @@ Cada fase se cierra con alcance definido, pruebas proporcionales, documentación
 | 6D.2 | Verificación de identidad, printings y taxonomías — **completada** | Evidencia oficial y gates revisados; diseño de migración permitido sólo con condiciones. |
 | 6D.3 | Diseño de migración CardPrinting — **completada** | Plan expand–migrate–contract reversible para el piloto, sin ejecutar cambios técnicos. |
 | 6D.4 | Implementación controlada CardPrinting — **completada** | CardPrinting, migraciones controladas, consumidores, admin y regresión verificados sin ampliar el dominio. |
+| 7A | Diseño funcional y arquitectura Deck Builder — **completada** | Diseño de dominio, seguridad, UX y gates; implementación RAM condicionada a reglas/datos verificables. |
 | Futuro | INGESTA CONTROLADA DE DATOS CHOOMDEX — SUSPENDIDA HASTA DISPONER DE FUENTE AUTORIZADA | Requiere Card/CardPrinting estable, fuente aprobada, deduplicación, dry-run, idempotencia y tests. |
 | 6 | Choomdex | Catálogo con procedencia de datos, filtros y estados explícitos de datos ausentes. |
 | 7 | Deck Builder | Mazos, restricciones configurables y validación servidor. |
