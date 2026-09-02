@@ -23,7 +23,7 @@ class HomeViewTests(TestCase):
 
         self.assertContains(response, 'href="/guias/')
         self.assertContains(response, 'href="/estrategias/')
-        self.assertNotContains(response, 'href="/choomdex/')
+        self.assertContains(response, 'href="/choomdex/')
 
     def test_footer_links_to_editorial_modules_without_future_labels(self):
         response = self.client.get(reverse("core:home"))

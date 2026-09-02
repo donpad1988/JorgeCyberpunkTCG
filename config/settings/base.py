@@ -15,6 +15,7 @@ INSTALLED_APPS = [
     "apps.accounts.apps.AccountsConfig",
     "apps.content.apps.ContentConfig",
     "apps.videos.apps.VideosConfig",
+    "apps.cards.apps.CardsConfig",
 ]
 
 MIDDLEWARE = [

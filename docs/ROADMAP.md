@@ -14,6 +14,7 @@ Cada fase se cierra con alcance definido, pruebas proporcionales, documentación
 | 5 | Integración editorial con YouTube — **completada** | Metadatos propios y relaciones con guías sin depender de API externa. |
 | 6A | Diseño y auditoría Choomdex — **completada** | Arquitectura, política de fuentes y MVP definidos sin implementar datos. |
 | 6A.1 | Verificación de fuentes Choomdex — **completada** | Contrato 6B refinado con fuentes oficiales; sin implementación. |
+| 6B | MVP Choomdex — **completada** | Catálogo y administración vacíos con datos verificados manualmente. |
 | 6 | Choomdex | Catálogo con procedencia de datos, filtros y estados explícitos de datos ausentes. |
 | 7 | Deck Builder | Mazos, restricciones configurables y validación servidor. |
 | 8 | RAM Budget Analyzer y herramientas presenciales | Analizador de RAM separado de Eddies y terminal móvil de partida. |

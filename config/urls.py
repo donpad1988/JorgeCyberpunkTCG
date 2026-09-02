@@ -10,6 +10,7 @@ urlpatterns = [
     path("cuenta/", include("apps.accounts.urls")),
     path("", include("apps.content.urls")),
     path("", include("apps.videos.urls")),
+    path("", include("apps.cards.urls")),
     path("", include("apps.core.urls")),
 ]
 

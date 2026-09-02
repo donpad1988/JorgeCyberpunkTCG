@@ -59,6 +59,6 @@ class EditorialContentTests(TestCase):
         self.assertContains(response, f'href="{reverse("content:strategy_list")}"')
         self.assertNotContains(response, "Guías <small>Próximamente")
         self.assertNotContains(response, "Estrategias <small>Próximamente")
-        self.assertContains(response, "Choomdex <small>Próximamente")
+        self.assertContains(response, f'href="{reverse("cards:catalog")}">Choomdex</a>')
         self.assertIn(Article, admin.site._registry)
         self.assertIn(ContentCategory, admin.site._registry)
