@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}Mazos públicos | Jorge CyberpunkTCG{% endblock %}
+{% block content %}
+<section class="section"><div class="container"><p class="eyebrow">DECKS // PUBLIC NETWORK</p><h1>Mazos públicos</h1>{% if decks %}<div class="card-grid">{% for deck in decks %}<article class="data-card"><h2><a href="{% url 'decks:deck_detail' deck.owner.username deck.slug %}">{{ deck.name }}</a></h2><p>Por @{{ deck.owner.username }} · Actualizado {{ deck.updated_at|date:"d/m/Y H:i" }}</p></article>{% endfor %}</div>{% else %}<div class="empty-state"><h2>No hay mazos públicos todavía.</h2></div>{% endif %}</div></section>
+{% endblock %}
