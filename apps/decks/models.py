@@ -30,6 +30,10 @@ class Deck(models.Model):
         super().save(*args, **kwargs)
         DeckEditorialProfile.objects.get_or_create(deck=self)
 
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse("decks:deck_detail", kwargs={"username": self.owner.username, "slug": self.slug})
+
 
 class DeckLegend(models.Model):
     deck = models.ForeignKey(Deck, on_delete=models.CASCADE, related_name="legends")

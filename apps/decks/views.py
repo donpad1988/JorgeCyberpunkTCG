@@ -1,11 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db import transaction
-from django.db.models import Count
+from django.db.models import Count, Prefetch
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.cards.models import Card, Set
+from apps.videos.models import Video
 
 from .forms import CardActionForm, DeckEditorialForm, DeckKeyCardFormSet, DeckMetadataForm, EntryActionForm
 from .models import Deck, DeckEditorialProfile
@@ -15,7 +16,8 @@ from .services import DeckCompositionError, DeckCompositionService, DeckValidati
 def get_visible_deck_or_404(request, username, slug):
     deck = get_object_or_404(
         Deck.objects.select_related("owner", "editorial_profile").prefetch_related(
-            "legends__card", "entries__card", "editorial_profile__key_cards__card"
+            "legends__card", "entries__card", "editorial_profile__key_cards__card",
+            Prefetch("related_videos", queryset=Video.objects.filter(is_active=True), to_attr="public_related_videos"),
         ),
         owner__username=username,
         slug=slug,
@@ -68,7 +70,7 @@ def deck_detail(request, username, slug):
     return render(
         request,
         "decks/deck_detail.html",
-        {"deck": deck, "validation": validation, "public_card_ids": public_card_ids, "legends": legends, "entries": entries},
+        {"deck": deck, "validation": validation, "public_card_ids": public_card_ids, "legends": legends, "entries": entries, "videos": deck.public_related_videos},
     )
 
 
