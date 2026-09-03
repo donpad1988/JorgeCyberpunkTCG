@@ -1,58 +1,147 @@
 # Roadmap maestro — JorgeCyberpunkTCG
 
-## Método de ejecución
+## Visión General y Estado del Proyecto
 
-Cada fase se cierra con alcance definido, pruebas proporcionales, documentación de decisiones y verificación. Una fase no se considera completada por tener interfaz: debe cumplir sus controles de seguridad, datos y mantenimiento correspondien## Estrategia y Categorización del Roadmap
+El proyecto **JorgeCyberpunkTCG** ha completado su **despliegue técnico inicial en producción** sobre la plataforma **PythonAnywhere** (`https://jorgecyberpunktcg.pythonanywhere.com/`).
 
-### 1. COMPLETADO
-- **0 → 7I.1**: Fundación técnica, Usuarios, Guías, YouTube, MVP Choomdex (Card/CardPrinting), Deck Builder CRUD/Interactivo, Tactical Deck File, Tactical Deck Library, Editor Editorial, Tactical Deck Analysis Experience y Coherencia Visual de Gestión.
-- **8A — Release Readiness & Roadmap Realignment** (Hito de decisión y auditoría de producto).
-- **8C — SEO & Discovery Readiness — completada**: Sitemap dinámico (`sitemap.xml`), `robots.txt` controlado por Django, enlaces canónicos limpios (`<link rel="canonical">`) y coherencia `noindex` en áreas privadas/borradores.
-- **8D.1 — Production Architecture & Deployment Audit — completada**: Auditoría de infraestructura, aprobación de PythonAnywhere + SQLite y diseño de despliegue.
-- **8D.2 — Production Configuration Implementation — completada**: Preparación de `production.py`, HSTS progresivo, logging a consola, plantillas 404/500, `/health/` y guía de despliegue.
-
-### 2. PRE-LANZAMIENTO (Recomendado antes del despliegue oficial)
-- **8B — Experimento de contenido real & flujo táctico (HOLD)**: Suspendido temporalmente hasta la estabilización de las reglas/cartas definitivas del juego.
-- **8D.3 — Deployment Execution (PythonAnywhere)**: Ejecución del despliegue real en PythonAnywhere (requiere aprobación humana).
-- **8E — Auditoría transversal pre-lanzamiento**: Verificación final de seguridad, performance y checklist de despliegue.
-
-### 3. POST-LANZAMIENTO / CONDICIONAL (Solo bajo demanda de usuarios)
-- **Fase 9 — Comunidad (MVP)**: Comentarios moderados, reportes y antiabuso (exige tráfico y audiencia activa previa).
-- **Fase 10 — Gamificación y Netrunner Dashboard**: Street Cred, Eddies, avatares y recompensas comunitarias.
-
-### 4. BLOQUEADO POR FUENTES EXTERNAS / NO-GO ACTUAL
-- **INGESTA MASIVA DE CHOOMDEX**: Suspendida hasta disponer de fuente oficial autorizada o API directa.
-- **RAM ANALYZER**: Despriorizado (`NOT_EVALUATED`) a la espera de reglas oficiales verificadas.
+> [!IMPORTANT]
+> **Diferenciación Pre-lanzamiento vs Lanzamiento Oficial**:
+> Este hito marca la finalización del *despliegue técnico inicial* de la infraestructura MVP. El proyecto se mantiene en estado **prelaunch** (pre-lanzamiento), alineado con el lanzamiento oficial del juego TCG previsto para **octubre de 2026**. Los datos, reglas, cartas y contenidos continuarán evolucionando en el entorno pre-lanzamiento.
 
 ---
 
-## Cuadro de Registro de Fases
+## Mapeo entre Subfases Operativas y Roadmap Maestro
 
-| Fase | Resultado esperado | Condición de cierre |
-|---|---|---|
-| 0 | Constitución, arquitectura y planificación | Documentos aprobados; no hay código Django. |
-| 1 | Fundación técnica Django — **completada** | Proyecto mínimo, settings por entorno, usuario personalizado, pruebas y Git ignorando secretos. |
-| 2 | Sistema visual y Home — **completada** | Design tokens originales, layout responsive/accesible y Home basada en contenido propio. |
-| 3 | Usuarios y autenticación — **completada** | Registro, acceso, recuperación y perfil base con permisos verificados. |
-| 4 | Guías y estrategias — **completada** | Modelo editorial, categorías, slugs, administración y páginas indexables. |
-| 5 | Integración editorial con YouTube — **completada** | Metadatos propios y relaciones con guías sin depender de API externa. |
-| 6A–6D.4 | MVP Choomdex & CardPrinting — **completada** | Catálogo, impresiones, sets, procedencia y gates de verificación pasados. |
-| 7A–7I.1 | Ecosistema de Mazos — **completada** | Builder interactivo, Ficha Táctica, Biblioteca pública, Editor Editorial y Análisis 7I. Módulo congelado. |
-| 8A | Auditoría y Realineación — **completada** | Auditoría de producto, congelación de Mazos y propuesta de roadmap aprobada. |
-| 8C | SEO & Discovery Readiness — **completada** | Sitemap.xml, robots.txt, canonicals y meta robots sin dependencias externas ni cambios de esquema. |
-| 8D.1 | Production Architecture Audit — **completada** | Auditoría técnica y aprobación de arquitectura PythonAnywhere + SQLite. |
-| 8D.2 | Production Configuration — **completada** | Settings de producción, HSTS progresivo, logging consola, 404/500, /health/ y guía de despliegue. |
-| 8D.3 | Deployment Execution | Ejecución del despliegue en PythonAnywhere tras aprobación humana. |
+Durante el desarrollo reciente se utilizaron nomenclaturas operativas para agrupar paquetes de trabajo (tales como `8A`, `8C`, `8D.1`, `8D.2` y `8D.3`). Estas denominaciones **no sustituyen las fases funcionales originales (8 a 12)** del roadmap maestro, sino que corresponden a trabajos transversales y hitos de preparación:
 
-## Ajuste razonado
+- **8A (Release Readiness & Roadmap Realignment)**: Hito operativo de auditoría de producto y realineación del roadmap.
+- **8C (SEO & Discovery Readiness)**: Trabajo adelantado conceptualmente perteneciente a la **Fase 13 (SEO / Seguridad / Rendimiento)**.
+- **8D.1 (Production Architecture & Deployment Audit)**: Preparación transversal de arquitectura para **Fases 13 y 14**.
+- **8D.2 (Production Configuration Implementation)**: Configuración técnica de producción perteneciente a las **Fases 13 y 14**.
+- **8D.3 (Deployment Execution)**: Ejecución del despliegue técnico inicial de la **Fase 14 (Producción)**.
 
-Se conserva el orden conceptual. La Fase 1 debe fijar el usuario personalizado antes de cualquier migración, aunque el flujo de autenticación visible se posponga a la Fase 3. La Fase 13 no sustituye los controles previos: consolida una auditoría transversal final.
+Las fases funcionales originales **Fase 8 (Herramientas)**, **Fase 9 (Comunidad)**, **Fase 10 (Gamificación)**, **Fase 11 (Dashboard)** y **Fase 12 (Eventos)** permanecen vigentes en el roadmap maestro como fases pendientes, en HOLD o congeladas según las necesidades reales del producto.
 
-Desde 7E el proyecto **no busca competir con el Deck Builder oficial**. Mazos es principalmente una biblioteca táctica/editorial conectable al contenido propio de YouTube; el Builder queda como infraestructura para preparar y mantener composiciones.
+---
 
-## Hitos de decisión previos a módulos con datos externos
+## Estado Real del Roadmap Maestro (Fases 0–14)
 
-- Antes de Fase 5: decidir fuente, permisos y cadencia de actualización de metadatos de YouTube.
-- Antes de Fase 6: validar fuentes y licencia de cada dato del juego; definir política de evidencia y correcciones.
-- Antes de incorporar mercado: investigar APIs, términos, costes, límites y atribución; si no existe una fuente fiable, mantener «Sin datos de mercado».
-- Antes de Fases 9–10: definir política de comunidad, moderación, retención de auditoría y límites antiabuso.
+### FASE 0 — Constitución Técnica
+- **Estado**: `COMPLETADA`
+- **Descripción**: Definición de arquitectura inicial, convenciones, stack (Django, Python 3.13, Vanilla CSS *Neural Interface*) y gobernanza de código.
+
+### FASE 1 — Core + Identidad Visual (Fundación Django)
+- **Estado**: `COMPLETADA`
+- **Descripción**: Configuración base de Django, sistema de usuarios personalizado, design system cibernético *Neural Interface*, entorno estructurado y tests base.
+
+### FASE 2 — Home
+- **Estado**: `COMPLETADA`
+- **Descripción**: Landing page principal responsive, integración de tokens de diseño, navegación, footer y estructura accesible orientada a contenido propio.
+
+### FASE 3 — Usuarios
+- **Estado**: `COMPLETADA`
+- **Descripción**: Autenticación, registro de usuarios, login, logout, gestión de perfil cibernético y permisos base.
+
+### FASE 4 — Guías / Estrategias
+- **Estado**: `COMPLETADA`
+- **Descripción**: Sistema de gestión de contenidos editoriales, categorías, artículos tácticos, slugs y vistas públicas indexables.
+
+### FASE 5 — YouTube
+- **Estado**: `COMPLETADA`
+- **Descripción**: Integración de contenido audiovisual (videos de YouTube) como apoyo editorial a las guías y estrategias sin dependencias complejas de APIs de terceros.
+
+### FASE 6 — Choomdex
+- **Estado**: `COMPLETADA (Base Arquitectónica) / HOLD (Ingesta Masiva)`
+- **Descripción**: Modelo de datos unificado (`Card` + `CardPrinting`), taxonomías (facciones, tipos, rarezas, ilustradores, sets), vistas de catálogo y detalle táctico.
+- **Política de Ingesta (CONGELADA / HOLD)**: La ingesta masiva continúa **suspendida** hasta disponer de una fuente autorizada. Se aplican estrictamente las reglas:
+  - *No scraping* ni bots.
+  - *No importación masiva* desde sitios oficiales sin permisos.
+  - *No uso de imágenes oficiales* sin licencia o autorización expresa.
+  - El Choomdex crecerá exclusivamente mediante un flujo **editorial y controlado**.
+
+### FASE 7 — Deck Builder / Sistema Táctico de Mazos
+- **Estado**: `COMPLETADA (Arquitectura) / CONGELADA (Funcionalmente)`
+- **Descripción**: Ecosistema completo de mazos (Builder interactivo, *Tactical Deck File*, *Tactical Deck Library*, Editor Editorial y *Tactical Deck Analysis Experience*).
+- **Enfoque de Producto**: Redefinido para centrarse en la **Tactical Deck Library / Tactical Deck File** como herramienta de divulgación editorial. El Deck Builder interno actúa como infraestructura auxiliar de soporte.
+- **Límites de Alcance**: **No competir** con el Deck Builder oficial del TCG. Permanecen congelados/no implementados hasta que la demanda y el contenido real lo justifiquen:
+  - Matchups
+  - Mulligan simulator
+  - Generador de combos y sinergias complejas
+  - Métricas avanzadas
+  - RAM validation automática
+
+### FASE 8 — Herramientas
+- **Estado**: `PENDIENTE / HOLD`
+- **RAM Budget**: En **NO-GO temporal** debido a que los datos y reglas oficiales de costo/RAM aún no son lo suficientemente estables o verificados.
+- **Companion App**: **PENDIENTE**. No se implementará en la etapa prelaunch actual.
+
+### FASE 9 — Comunidad
+- **Estado**: `PENDIENTE`
+- **Descripción**: Módulo de interacción social (comentarios moderados, favoritos, mazos públicos con interacción, reportes y antiabuso).
+- **Consideraciones**: Introduce complejidad operacional (moderación, spam, privacidad, concurrencia). Su implementación se evaluará tras el lanzamiento público si existe audiencia activa. Podría justificar la migración a PostgreSQL en el futuro, aunque **no es requerida para el MVP**.
+
+### FASE 10 — Gamificación
+- **Estado**: `PENDIENTE`
+- **Descripción**: Economía interna y sistema de incentivos comunitarios (XP, Street Cred, Eddies, Gigs).
+- **Criterio**: Se evita crear una economía artificial previa al lanzamiento. Se implementará únicamente cuando se identifiquen comportamientos reales de los usuarios que valga la pena recompensar.
+
+### FASE 11 — Dashboard (Terminal de Netrunner)
+- **Estado**: `PENDIENTE`
+- **Descripción**: Panel de control avanzado y métricas para el usuario Netrunner.
+- **Criterio**: Se construirá posteriormente a la existencia de actividad comunitaria real para evitar presentar un panel con métricas ficticias o placeholders.
+
+### FASE 12 — Eventos
+- **Estado**: `PENDIENTE`
+- **Descripción**: Módulo para la organización y seguimiento de eventos y comunidad presencial.
+- **Criterio**: Se evaluará una vez que el juego oficial esté lanzado y existan comunidades presenciales activas.
+
+### FASE 13 — SEO / Seguridad / Rendimiento
+- **Estado**: `PARCIALMENTE ADELANTADA`
+- **SEO & Discovery (Completado en 8C)**:
+  - `sitemap.xml` dinámico.
+  - `robots.txt` gestionado dinámicamente por Django.
+  - Etiquetas `<link rel="canonical">` y directivas `noindex` en zonas privadas/borradores.
+  - Visibilidad orientada al descubrimiento orgánico prelaunch.
+- **Production Readiness (Completado en 8D.2)**:
+  - Configuración modular de producción (`config.settings.production`).
+  - Endpoint de salud `/health/` retornando `200 OK`.
+  - Páginas personalizadas de error `404.html` y `500.html`.
+  - HTTPS, secure cookies, SSL redirect y logging a consola.
+- **Política HSTS**: `SECURE_HSTS_SECONDS = 0` se mantiene **deliberadamente** durante la fase de estabilización inicial (HSTS progresivo).
+
+### FASE 14 — Producción / Despliegue
+- **Estado**: `DESPLIEGUE TÉCNICO INICIAL COMPLETADO`
+- **Hosting**: PythonAnywhere.
+- **URL Producción**: `https://jorgecyberpunktcg.pythonanywhere.com/`
+- **Arquitectura de Producción**: PythonAnywhere WSGI + SQLite limpia + servido estático nativo de PythonAnywhere.
+- **Carácter del Despliegue**: Despliegue técnico inicial pre-lanzamiento. El entorno de producción servirá como plataforma de pruebas controladas e integración continua hacia el lanzamiento oficial en **octubre de 2026**.
+
+---
+
+## Cuadro de Resumen del Roadmap Maestro
+
+| Fase | Título | Estado | Descripción Sintética |
+|---|---|---|---|
+| 0 | Constitución técnica | `COMPLETADA` | Arquitectura, stack y gobernanza técnica. |
+| 1 | Fundación Django | `COMPLETADA` | Settings, usuario personalizado, design tokens Neural Interface. |
+| 2 | Home | `COMPLETADA` | Landing page cibernética responsive y estructurada. |
+| 3 | Usuarios | `COMPLETADA` | Registro, autenticación, perfiles y permisos. |
+| 4 | Guías / Estrategias | `COMPLETADA` | Publicaciones editoriales y categorización táctica. |
+| 5 | YouTube | `COMPLETADA` | Integración de video propio como soporte editorial. |
+| 6 | Choomdex | `COMPLETADA (Base) / HOLD (Ingesta)` | Modelo Card/CardPrinting. Ingesta masiva congelada (no scraping, crecimiento editorial). |
+| 7 | Sistema Táctico de Mazos | `COMPLETADA (Arq) / CONGELADA (Func)` | Tactical Deck Library / File. Sin funciones complejas ni competencia con app oficial. |
+| 8 | Herramientas | `PENDIENTE / HOLD` | RAM Budget (NO-GO temporal) y Companion App (Pendiente). |
+| 9 | Comunidad | `PENDIENTE` | Comentarios, favoritos y moderación. Evaluación post-lanzamiento. |
+| 10 | Gamificación | `PENDIENTE` | Sistema de XP, Street Cred y Eddies. Pendiente a hábitos reales. |
+| 11 | Dashboard Netrunner | `PENDIENTE` | Terminal de usuario. Requiere actividad comunitaria previa. |
+| 12 | Eventos | `PENDIENTE` | Eventos presenciales y torneos. Pendiente a lanzamiento oficial. |
+| 13 | SEO / Seguridad / Performance | `PARCIALMENTE ADELANTADA` | SEO completado (8C). Security settings y health completados (8D.2). HSTS=0 deliberado. |
+| 14 | Producción / Despliegue | `DESPLIEGUE TÉCNICO INICIAL` | Live en PythonAnywhere con SQLite limpia. Prelaunch hacia octubre 2026. |
+
+---
+
+## Directrices de Decisiones Futuras
+
+1. **Evaluación de Datos Oficiales (Octubre 2026)**: Cualquier actualización masiva de cartas o reglas del TCG debe esperar a la publicación oficial de fuentes autorizadas o licencias explícitas.
+2. **Evolución a PostgreSQL**: Se mantendrá SQLite mientras la carga de lectura y ausencia de concurrencia masiva de escritura lo permitan. La migración a PostgreSQL solo se justificará si la Fase 9 (Comunidad) o la Fase 10 (Gamificación) introducen alta frecuencia de transacciones de usuarios simultáneos.
+3. **Activación Progresiva de HSTS**: Una vez verificada la estabilidad del dominio y SSL en producción a lo largo de varias semanas de operación prelaunch, se programará la elevación gradual de `SECURE_HSTS_SECONDS`.
