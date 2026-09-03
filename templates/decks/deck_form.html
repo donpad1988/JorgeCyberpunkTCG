@@ -1,5 +1,49 @@
 {% extends "base.html" %}
-{% block title %}{{ heading }} | Jorge CyberpunkTCG{% endblock %}
+{% load static %}
+{% block title %}{{ heading }} | {% if deck %}{{ deck.name }} | {% endif %}Jorge CyberpunkTCG{% endblock %}
+{% block extra_css %}<link rel="stylesheet" href="{% static 'css/decks.css' %}">{% endblock %}
 {% block content %}
-<section class="section"><div class="container"><p class="eyebrow">DECKS // METADATA</p><h1>{{ heading }}</h1><form method="post" class="auth-form">{% csrf_token %}{% for field in form %}<p><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% for error in field.errors %}<span class="form-error">{{ error }}</span>{% endfor %}</p>{% endfor %}<button class="button" type="submit">Guardar mazo</button></form></div></section>
+<section class="section deck-metadata"><div class="container deck-metadata__container">
+  <header class="deck-metadata__header">
+    <p class="eyebrow">DECKS // METADATA</p>
+    <h1>{{ heading }}</h1>
+    <p class="deck-metadata__lead">Configura los datos principales, la visibilidad pública y el estado editorial del mazo.</p>
+  </header>
+  <form method="post" class="deck-metadata__form">{% csrf_token %}
+    {% if form.non_field_errors %}
+      <div class="deck-metadata__errors" role="alert">{{ form.non_field_errors }}</div>
+    {% endif %}
+    <section class="deck-metadata__panel" aria-labelledby="metadata-config-title">
+      <p class="eyebrow">CONFIGURACIÓN DEL MAZO</p>
+      <h2 id="metadata-config-title">Información y visibilidad</h2>
+      
+      {% for field in form %}
+        <div class="deck-metadata__field{% if field.name == 'is_public' %} deck-metadata__field--checkbox{% endif %}">
+          {% if field.name == 'is_public' %}
+            <div class="deck-metadata__checkbox-wrapper">
+              {{ field }}
+              <label class="deck-metadata__label deck-metadata__label--checkbox" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            </div>
+            {% if field.help_text %}<p class="deck-metadata__help">{{ field.help_text }}</p>{% endif %}
+          {% else %}
+            <label class="deck-metadata__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}<p class="deck-metadata__help">{{ field.help_text }}</p>{% endif %}
+          {% endif %}
+          {% if field.errors %}
+            <div class="deck-metadata__errors" role="alert">{{ field.errors }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </section>
+
+    <div class="deck-metadata__actions">
+      <button class="button" type="submit">Guardar mazo</button>
+      {% if deck %}
+        <a class="button button--ghost" href="{{ deck.get_absolute_url }}">Volver al mazo</a>
+      {% endif %}
+    </div>
+  </form>
+</div></section>
 {% endblock %}
+

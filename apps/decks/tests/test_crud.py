@@ -158,3 +158,66 @@ class DeckCrudSecurityTests(DeckTestMixin, TestCase):
         authenticated = self.client.get(reverse("decks:my_decks"))
         self.assertContains(authenticated, reverse("decks:my_decks"))
         self.assertNotContains(authenticated, "Mazos <small>Próximamente</small>", html=False)
+
+    def test_metadata_form_get_labels_help_text_and_cta(self):
+        deck = self.create_deck("Meta Test Deck")
+        self.client.force_login(self.owner)
+
+        response = self.client.get(self.urls(deck)["update"])
+        self.assertEqual(response.status_code, 200)
+
+        # Assert Spanish labels present
+        self.assertContains(response, "Nombre del mazo")
+        self.assertContains(response, "Descripción")
+        self.assertContains(response, "Visible públicamente")
+        self.assertContains(response, "Estado editorial")
+
+        # Assert help texts present
+        self.assertContains(response, "Controla si otras personas pueden acceder al mazo.")
+        self.assertContains(response, "Indica si el análisis está en borrador, publicado o archivado.")
+
+        # Assert CTA button "Volver al mazo" present with absolute url
+        self.assertContains(response, "Volver al mazo")
+        self.assertContains(response, deck.get_absolute_url())
+
+        # Assert old English field labels NOT present as form labels
+        self.assertNotContains(response, '<label class="deck-metadata__label" for="id_name">Name</label>')
+        self.assertNotContains(response, '<label class="deck-metadata__label" for="id_description">Description</label>')
+        self.assertNotContains(response, '<label class="deck-metadata__label deck-metadata__label--checkbox" for="id_is_public">Is public</label>')
+        self.assertNotContains(response, '<label class="deck-metadata__label" for="id_editorial_status">Editorial status</label>')
+
+    def test_metadata_form_post_updates_all_fields_and_validates(self):
+        deck = self.create_deck("Initial Meta", is_public=False, editorial_status="DRAFT")
+        self.client.force_login(self.owner)
+
+        # Valid POST update
+        res = self.client.post(
+            self.urls(deck)["update"],
+            {
+                "name": "Updated Meta Name",
+                "description": "Nueva descripción cibernética",
+                "is_public": "on",
+                "editorial_status": "PUBLISHED",
+            },
+        )
+        deck.refresh_from_db()
+        self.assertRedirects(res, self.urls(deck)["detail"])
+        self.assertEqual(deck.name, "Updated Meta Name")
+        self.assertEqual(deck.description, "Nueva descripción cibernética")
+        self.assertTrue(deck.is_public)
+        self.assertEqual(deck.editorial_status, "PUBLISHED")
+
+        # Invalid POST update (empty required name field)
+        invalid_res = self.client.post(
+            self.urls(deck)["update"],
+            {
+                "name": "",
+                "description": "Fail",
+            },
+        )
+        self.assertEqual(invalid_res.status_code, 200)
+        self.assertContains(invalid_res, "Este campo es obligatorio.")
+        deck.refresh_from_db()
+        self.assertEqual(deck.name, "Updated Meta Name")
+
+

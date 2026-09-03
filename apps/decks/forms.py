@@ -9,11 +9,28 @@ from .models import Deck, DeckEditorialProfile, DeckKeyCard
 
 
 class DeckMetadataForm(forms.ModelForm):
-    editorial_status = forms.ChoiceField(choices=Deck.EditorialStatus.choices, required=False)
+    editorial_status = forms.ChoiceField(
+        choices=Deck.EditorialStatus.choices,
+        required=False,
+        label="Estado editorial",
+        help_text="Indica si el análisis está en borrador, publicado o archivado.",
+    )
 
     class Meta:
         model = Deck
         fields = ("name", "description", "is_public", "editorial_status")
+        labels = {
+            "name": "Nombre del mazo",
+            "description": "Descripción",
+            "is_public": "Visible públicamente",
+        }
+        help_texts = {
+            "is_public": "Controla si otras personas pueden acceder al mazo.",
+        }
+        widgets = {
+            "name": forms.TextInput(attrs={"placeholder": "Nombre del mazo..."}),
+            "description": forms.Textarea(attrs={"rows": 4, "placeholder": "Descripción breve del mazo..."}),
+        }
 
     def __init__(self, *args, owner, **kwargs):
         super().__init__(*args, **kwargs)

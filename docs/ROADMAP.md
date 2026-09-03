@@ -32,6 +32,7 @@ Cada fase se cierra con alcance definido, pruebas proporcionales, documentación
 | 7H.1 | Pulido visual Tactical Deck Library — **completada** | Buscador condicional y estados editoriales encapsulados sin ampliar el dominio. |
 | 7H.2 | Pulido UX del editor de Tactical Deck File — **completada** | Editor editorial tematizado, labels en español y formset de Cartas clave preservado. |
 | 7I | Tactical Deck Analysis Experience — **completada** | Ficha táctica canónica prioriza análisis, Cartas clave y navegación editorial a Choomdex y Videos. |
+| 7I.1 | Coherencia visual y semántica de gestión de mazos — **completada** | Eyebrow contextual corregido (OWNER PREVIEW / PUBLIC NETWORK / ARCHIVED RECORD) y formulario de metadata totalmente adaptado a la interfaz cibernética. |
 | Futuro opcional | RAM Analyzer | Despriorizado: requiere valor agregado real, reglas verificadas y feedback antes de reabrir el gate. |
 | Futuro | INGESTA CONTROLADA DE DATOS CHOOMDEX — SUSPENDIDA HASTA DISPONER DE FUENTE AUTORIZADA | Requiere Card/CardPrinting estable, fuente aprobada, deduplicación, dry-run, idempotencia y tests. |
 | 6 | Choomdex | Catálogo con procedencia de datos, filtros y estados explícitos de datos ausentes. |

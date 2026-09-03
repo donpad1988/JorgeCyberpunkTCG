@@ -64,3 +64,27 @@ class DeckEditorialStatusTests(DeckTestMixin, TestCase):
         self.assertContains(response, "Archivo histórico")
         self.assertNotContains(response, draft.name)
         self.assertNotContains(response, private.name)
+
+    def test_eyebrow_contextual_descriptor_matrix(self):
+        draft_deck = self.create_deck("Draft Deck", is_public=False, editorial_status="DRAFT")
+        published_public = self.create_deck("Published Public", is_public=True, editorial_status="PUBLISHED")
+        published_private = self.create_deck("Published Private", is_public=False, editorial_status="PUBLISHED")
+        archived_deck = self.create_deck("Archived Deck", is_public=True, editorial_status="ARCHIVED")
+
+        self.client.force_login(self.owner)
+
+        res_draft = self.client.get(draft_deck.get_absolute_url())
+        self.assertContains(res_draft, "TACTICAL DECK FILE // OWNER PREVIEW")
+        self.assertNotContains(res_draft, "TACTICAL DECK FILE // PUBLIC NETWORK")
+        self.assertContains(res_draft, "Borrador")
+
+        res_pub_public = self.client.get(published_public.get_absolute_url())
+        self.assertContains(res_pub_public, "TACTICAL DECK FILE // PUBLIC NETWORK")
+
+        res_pub_priv = self.client.get(published_private.get_absolute_url())
+        self.assertContains(res_pub_priv, "TACTICAL DECK FILE // OWNER PREVIEW")
+        self.assertNotContains(res_pub_priv, "TACTICAL DECK FILE // PUBLIC NETWORK")
+
+        res_archived = self.client.get(archived_deck.get_absolute_url())
+        self.assertContains(res_archived, "TACTICAL DECK FILE // ARCHIVED RECORD")
+
