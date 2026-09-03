@@ -48,11 +48,21 @@ class DeckEditorialForm(forms.ModelForm):
     class Meta:
         model = DeckEditorialProfile
         fields = ("archetype", "short_summary", "strategy_overview", "game_plan", "strengths", "weaknesses")
+        labels = {
+            "archetype": "Arquetipo",
+            "short_summary": "Resumen corto",
+            "strategy_overview": "Estrategia",
+            "game_plan": "Plan de juego",
+            "strengths": "Fortalezas",
+            "weaknesses": "Debilidades",
+        }
         widgets = {
-            "strategy_overview": forms.Textarea(attrs={"rows": 5}),
-            "game_plan": forms.Textarea(attrs={"rows": 5}),
-            "strengths": forms.Textarea(attrs={"rows": 4}),
-            "weaknesses": forms.Textarea(attrs={"rows": 4}),
+            "archetype": forms.TextInput(attrs={"placeholder": "Ej. Control, presión, tempo…"}),
+            "short_summary": forms.TextInput(attrs={"placeholder": "Describe el mazo en pocas palabras."}),
+            "strategy_overview": forms.Textarea(attrs={"rows": 5, "placeholder": "Explica cómo funciona el mazo…"}),
+            "game_plan": forms.Textarea(attrs={"rows": 5, "placeholder": "Describe el plan de juego."}),
+            "strengths": forms.Textarea(attrs={"rows": 4, "placeholder": "Qué hace bien este mazo."}),
+            "weaknesses": forms.Textarea(attrs={"rows": 4, "placeholder": "Qué necesita vigilar este mazo."}),
         }
 
 
@@ -60,7 +70,16 @@ class DeckKeyCardForm(forms.ModelForm):
     class Meta:
         model = DeckKeyCard
         fields = ("card", "editorial_note", "display_order")
-        widgets = {"editorial_note": forms.Textarea(attrs={"rows": 3})}
+        labels = {
+            "card": "Carta",
+            "editorial_note": "Nota editorial",
+            "display_order": "Orden de visualización",
+        }
+        widgets = {
+            "editorial_note": forms.Textarea(
+                attrs={"rows": 3, "placeholder": "Explica por qué esta carta es importante dentro del mazo."}
+            ),
+        }
 
     def __init__(self, *args, deck, **kwargs):
         super().__init__(*args, **kwargs)
@@ -78,6 +97,10 @@ class BaseDeckKeyCardFormSet(BaseInlineFormSet):
         kwargs = super().get_form_kwargs(index)
         kwargs["deck"] = self.deck
         return kwargs
+
+    def add_fields(self, form, index):
+        super().add_fields(form, index)
+        form.fields["DELETE"].label = "Eliminar esta carta clave"
 
 
 DeckKeyCardFormSet = inlineformset_factory(

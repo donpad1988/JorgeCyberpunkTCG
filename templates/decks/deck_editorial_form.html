@@ -2,4 +2,20 @@
 {% load static %}
 {% block title %}Editar contenido | {{ deck.name }} | Jorge CyberpunkTCG{% endblock %}
 {% block extra_css %}<link rel="stylesheet" href="{% static 'css/decks.css' %}">{% endblock %}
-{% block content %}<section class="section"><div class="container editorial-form"><p class="eyebrow">TACTICAL DECK FILE // EDITORIAL</p><h1>Editar contenido de {{ deck.name }}</h1><p>Escribe análisis original para esta ficha. La composición se gestiona por separado.</p><form method="post" class="auth-form">{% csrf_token %}{% for field in form %}<p><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% for error in field.errors %}<span class="form-error">{{ error }}</span>{% endfor %}</p>{% endfor %}<section><h2>Cartas clave</h2><p>Selecciona cartas ya presentes en este mazo y explica por qué importan.</p>{{ formset.management_form }}{% for key_form in formset %}<fieldset class="key-card-form">{% for hidden in key_form.hidden_fields %}{{ hidden }}{% endfor %}{% for field in key_form.visible_fields %}<p><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% for error in field.errors %}<span class="form-error">{{ error }}</span>{% endfor %}</p>{% endfor %}</fieldset>{% endfor %}</section><button class="button" type="submit">Guardar contenido editorial</button></form></div></section>{% endblock %}
+{% block content %}
+<section class="section deck-editor"><div class="container deck-editor__container">
+  <header class="deck-editor__header"><p class="eyebrow">EDITORIAL TERMINAL</p><h1>Editar contenido de {{ deck.name }}</h1><p>Escribe análisis original para esta ficha. La composición se gestiona por separado.</p></header>
+  <form method="post" class="deck-editor__form">{% csrf_token %}
+    {% if form.non_field_errors %}<div class="deck-editor__errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+    <section class="deck-editor__panel" aria-labelledby="tactical-profile-title"><p class="eyebrow">TACTICAL PROFILE</p><h2 id="tactical-profile-title">Perfil táctico</h2><p class="deck-editor__help">Explica cómo funciona el mazo para que un jugador pueda entenderlo antes de revisar su composición.</p>
+      {% for field in form %}<div class="deck-editor__field"><label class="deck-editor__label" for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.errors %}<div class="deck-editor__errors" role="alert">{{ field.errors }}</div>{% endif %}</div>{% endfor %}
+    </section>
+    <section class="deck-editor__panel" aria-labelledby="key-cards-title"><p class="eyebrow">EDITORIAL PRIORITIES</p><h2 id="key-cards-title">Cartas clave</h2><p class="deck-editor__help">Selecciona cartas ya presentes en este mazo y explica por qué importan.</p>
+      {% if formset.non_form_errors %}<div class="deck-editor__errors" role="alert">{{ formset.non_form_errors }}</div>{% endif %}
+      {{ formset.management_form }}
+      <div class="deck-editor__key-cards">{% for key_form in formset %}<fieldset class="deck-editor__key-card"><legend>CARTA CLAVE // {{ forloop.counter }}</legend>{% for hidden in key_form.hidden_fields %}{{ hidden }}{% endfor %}{% if key_form.non_field_errors %}<div class="deck-editor__errors" role="alert">{{ key_form.non_field_errors }}</div>{% endif %}{% for field in key_form.visible_fields %}<div class="deck-editor__field{% if field.name == 'display_order' %} deck-editor__field--order{% endif %}{% if field.name == 'DELETE' %} deck-editor__field--delete{% endif %}"><label class="deck-editor__label" for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.errors %}<div class="deck-editor__errors" role="alert">{{ field.errors }}</div>{% endif %}</div>{% endfor %}</fieldset>{% endfor %}</div>
+    </section>
+    <div class="deck-editor__actions"><button class="button" type="submit">Guardar contenido editorial</button><a class="button button--ghost" href="{{ deck.get_absolute_url }}">Volver al mazo</a></div>
+  </form>
+</div></section>
+{% endblock %}

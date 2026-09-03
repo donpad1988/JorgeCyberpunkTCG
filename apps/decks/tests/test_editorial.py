@@ -113,6 +113,54 @@ class DeckEditorialViewTests(DeckTestMixin, TestCase):
         self.assertEqual(profile.short_summary, "Un resumen original actualizado.")
         self.assertEqual(profile.key_cards.get().editorial_note, "Nueva explicación propia.")
 
+    def test_owner_editor_renders_spanish_editorial_and_key_card_labels(self):
+        self.client.force_login(self.owner)
+
+        response = self.client.get(self.urls()["editorial"])
+
+        self.assertEqual(response.status_code, 200)
+        for label in (
+            "Arquetipo", "Resumen corto", "Estrategia", "Plan de juego", "Fortalezas", "Debilidades",
+            "Cartas clave", "Carta", "Nota editorial", "Orden de visualización", "Eliminar esta carta clave",
+        ):
+            self.assertContains(response, label)
+        for old_label in ("Archetype", "Short summary", "Strategy overview", "Game plan", "Strengths", "Weaknesses"):
+            self.assertNotContains(response, old_label)
+
+    def test_key_card_formset_delete_still_works(self):
+        self.client.force_login(self.owner)
+        payload = self.editorial_payload()
+        payload["key_cards-0-DELETE"] = "on"
+
+        response = self.client.post(self.urls()["editorial"], payload)
+
+        self.assertRedirects(response, self.urls()["detail"])
+        self.assertFalse(self.deck.editorial_profile.key_cards.exists())
+
+    def test_invalid_key_card_selection_shows_error_and_keeps_existing_data(self):
+        excluded = self.create_card("Excluded")
+        key_card = self.deck.editorial_profile.key_cards.get()
+        self.client.force_login(self.owner)
+        payload = self.editorial_payload()
+        payload["key_cards-0-card"] = str(excluded.pk)
+
+        response = self.client.post(self.urls()["editorial"], payload)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Esa opción no está entre las disponibles.")
+        key_card.refresh_from_db()
+        self.assertEqual(key_card.card, self.main)
+
+    def test_other_owner_cannot_post_editorial_changes(self):
+        original_summary = self.deck.editorial_profile.short_summary
+        self.client.force_login(self.other_owner)
+
+        response = self.client.post(self.urls()["editorial"], self.editorial_payload())
+
+        self.assertEqual(response.status_code, 404)
+        self.deck.editorial_profile.refresh_from_db()
+        self.assertEqual(self.deck.editorial_profile.short_summary, original_summary)
+
     def test_public_library_shows_editorial_summary_only_for_public_decks(self):
         private = self.create_deck("Hidden", owner=self.other_owner)
         private.editorial_profile.short_summary = "No visible"

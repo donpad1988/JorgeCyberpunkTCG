@@ -30,6 +30,7 @@ Cada fase se cierra con alcance definido, pruebas proporcionales, documentación
 | 7G | Release-Ready Editorial — **completada** | Vigencia editorial de Decks separada de visibilidad, archivo histórico y preparación para la revisión de lanzamiento. |
 | 7H | Tactical Deck Library — **completada** | Biblioteca pública editorial, búsqueda segura, archivo histórico y descubrimiento de Tactical Deck Files. |
 | 7H.1 | Pulido visual Tactical Deck Library — **completada** | Buscador condicional y estados editoriales encapsulados sin ampliar el dominio. |
+| 7H.2 | Pulido UX del editor de Tactical Deck File — **completada** | Editor editorial tematizado, labels en español y formset de Cartas clave preservado. |
 | 7I | Integración editorial transversal — **pendiente** | Evolución de relaciones editoriales tras validar el flujo de lanzamiento. |
 | Futuro opcional | RAM Analyzer | Despriorizado: requiere valor agregado real, reglas verificadas y feedback antes de reabrir el gate. |
 | Futuro | INGESTA CONTROLADA DE DATOS CHOOMDEX — SUSPENDIDA HASTA DISPONER DE FUENTE AUTORIZADA | Requiere Card/CardPrinting estable, fuente aprobada, deduplicación, dry-run, idempotencia y tests. |
