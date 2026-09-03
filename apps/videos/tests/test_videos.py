@@ -27,7 +27,7 @@ class VideoTests(TestCase):
         self.assertContains(self.client.get(reverse("videos:list")),"Transmisiones pendientes")
 
     def create_deck(self,name,*,is_public=True):
-        deck=Deck.objects.create(owner=self.article.author,name=name,is_public=is_public)
+        deck=Deck.objects.create(owner=self.article.author,name=name,is_public=is_public,editorial_status="PUBLISHED" if is_public else "DRAFT")
         deck.editorial_profile.archetype="Control"
         deck.editorial_profile.short_summary=f"Resumen de {name}."
         deck.editorial_profile.save()

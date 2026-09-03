@@ -9,9 +9,11 @@ from .models import Deck, DeckEditorialProfile, DeckKeyCard
 
 
 class DeckMetadataForm(forms.ModelForm):
+    editorial_status = forms.ChoiceField(choices=Deck.EditorialStatus.choices, required=False)
+
     class Meta:
         model = Deck
-        fields = ("name", "description", "is_public")
+        fields = ("name", "description", "is_public", "editorial_status")
 
     def __init__(self, *args, owner, **kwargs):
         super().__init__(*args, **kwargs)
@@ -24,6 +26,14 @@ class DeckMetadataForm(forms.ModelForm):
             if Deck.objects.filter(owner=self.owner, slug=slug).exists():
                 raise forms.ValidationError("Ya tienes un mazo con este nombre.")
         return name
+
+    def clean_editorial_status(self):
+        status = self.cleaned_data["editorial_status"]
+        if status:
+            return status
+        if self.instance.pk:
+            return self.instance.editorial_status
+        return Deck.EditorialStatus.DRAFT
 
 
 class CardActionForm(forms.Form):

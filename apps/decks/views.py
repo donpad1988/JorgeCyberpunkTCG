@@ -22,7 +22,12 @@ def get_visible_deck_or_404(request, username, slug):
         owner__username=username,
         slug=slug,
     )
-    if deck.owner_id != getattr(request.user, "id", None) and not deck.is_public:
+    is_owner = deck.owner_id == getattr(request.user, "id", None)
+    is_publicly_accessible = deck.is_public and deck.editorial_status in (
+        Deck.EditorialStatus.PUBLISHED,
+        Deck.EditorialStatus.ARCHIVED,
+    )
+    if not is_owner and not is_publicly_accessible:
         raise Http404
     return deck
 
@@ -43,10 +48,12 @@ def my_decks(request):
 
 
 def public_decks(request):
-    decks = Deck.objects.filter(is_public=True).select_related("owner", "editorial_profile").annotate(
+    base_query = Deck.objects.filter(is_public=True).select_related("owner", "editorial_profile").annotate(
         legend_count=Count("legends", distinct=True), main_count=Count("entries", distinct=True)
-    ).order_by("-updated_at", "name")
-    return render(request, "decks/public_deck_list.html", {"decks": decks})
+    )
+    decks = base_query.filter(editorial_status=Deck.EditorialStatus.PUBLISHED).order_by("-updated_at", "name")
+    archived_decks = base_query.filter(editorial_status=Deck.EditorialStatus.ARCHIVED).order_by("-updated_at", "name")
+    return render(request, "decks/public_deck_list.html", {"decks": decks, "archived_decks": archived_decks})
 
 
 @login_required

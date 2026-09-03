@@ -26,8 +26,8 @@ class DeckKeyCardInline(admin.TabularInline):
 
 @admin.register(Deck)
 class DeckAdmin(admin.ModelAdmin):
-    list_display = ("name", "owner", "is_public", "created_at", "updated_at")
-    list_filter = ("is_public",)
+    list_display = ("name", "owner", "editorial_status", "is_public", "created_at", "updated_at")
+    list_filter = ("editorial_status", "is_public")
     search_fields = ("name", "slug", "owner__username")
     prepopulated_fields = {"slug": ("name",)}
     inlines = (DeckEditorialProfileInline, DeckLegendInline, DeckEntryInline)

@@ -22,6 +22,7 @@ class DeckBuilderTests(DeckTestMixin, TestCase):
     def test_builder_is_owner_only_even_for_public_decks(self):
         self.assertRedirects(self.client.get(self.url("decks:deck_builder")), f"/cuenta/login/?next={self.url('decks:deck_builder')}")
         self.deck.is_public = True
+        self.deck.editorial_status = "PUBLISHED"
         self.deck.save()
         self.client.force_login(self.other_owner)
         self.assertEqual(self.client.get(self.url("decks:deck_builder")).status_code, 404)
@@ -152,6 +153,7 @@ class DeckBuilderTests(DeckTestMixin, TestCase):
         self.client.force_login(self.owner)
         self.assertContains(self.client.get(self.url("decks:deck_detail")), "Construir mazo")
         self.deck.is_public = True
+        self.deck.editorial_status = "PUBLISHED"
         self.deck.save()
         self.client.force_login(self.other_owner)
         self.assertNotContains(self.client.get(self.url("decks:deck_detail")), "Construir mazo")

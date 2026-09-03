@@ -7,11 +7,17 @@ from apps.cards.models import Card
 
 
 class Deck(models.Model):
+    class EditorialStatus(models.TextChoices):
+        DRAFT = "DRAFT", "Borrador"
+        PUBLISHED = "PUBLISHED", "Publicado"
+        ARCHIVED = "ARCHIVED", "Archivado"
+
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="decks")
     name = models.CharField(max_length=160)
     slug = models.SlugField(max_length=180, blank=True)
     description = models.TextField(blank=True)
     is_public = models.BooleanField(default=False)
+    editorial_status = models.CharField(max_length=10, choices=EditorialStatus.choices, default=EditorialStatus.DRAFT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -49,7 +55,7 @@ class DeckLegend(models.Model):
 
     def clean(self):
         super().clean()
-        if self.card_id and self.card.card_type != Card.CardType.LEGEND:
+        if self.card_id and self.card.card_type != Card.CardType.LEGEND:    # type: ignore
             raise ValidationError({"card": "Solo una Card LEGEND puede ocupar una plaza de Legend."})
 
     def save(self, *args, **kwargs):
@@ -74,7 +80,7 @@ class DeckEntry(models.Model):
     def clean(self):
         super().clean()
         errors = {}
-        if self.card_id and self.card.card_type == Card.CardType.LEGEND:
+        if self.card_id and self.card.card_type == Card.CardType.LEGEND:    # type: ignore
             errors["card"] = "Las Legends no forman parte del mazo principal."
         if self.quantity is not None and self.quantity > 3:
             errors["quantity"] = "Una Card lógica no puede superar tres copias en el mazo principal."
@@ -119,9 +125,9 @@ class DeckKeyCard(models.Model):
 
     def clean(self):
         super().clean()
-        if self.profile_id and self.card_id:
+        if self.profile_id and self.card_id:    # type: ignore
             deck = self.profile.deck
-            is_in_deck = deck.legends.filter(card_id=self.card_id).exists() or deck.entries.filter(card_id=self.card_id).exists()
+            is_in_deck = deck.legends.filter(card_id=self.card_id).exists() or deck.entries.filter(card_id=self.card_id).exists()   # type: ignore
             if not is_in_deck:
                 raise ValidationError({"card": "La carta clave debe formar parte de la composición del mazo."})
 

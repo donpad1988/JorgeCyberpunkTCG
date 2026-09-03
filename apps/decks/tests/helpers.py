@@ -11,6 +11,8 @@ class DeckTestMixin:
         self.card_set = Set.objects.create(name="Deck Test Set")
 
     def create_deck(self, name="My deck", owner=None, **kwargs):
+        if kwargs.get("is_public"):
+            kwargs.setdefault("editorial_status", "PUBLISHED")
         return Deck.objects.create(owner=owner or self.owner, name=name, **kwargs)
 
     def create_card(self, name, *, card_type=Card.CardType.UNIT, status=Card.Status.PUBLISHED):
