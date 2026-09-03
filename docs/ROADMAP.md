@@ -8,10 +8,12 @@ Cada fase se cierra con alcance definido, pruebas proporcionales, documentación
 - **0 → 7I.1**: Fundación técnica, Usuarios, Guías, YouTube, MVP Choomdex (Card/CardPrinting), Deck Builder CRUD/Interactivo, Tactical Deck File, Tactical Deck Library, Editor Editorial, Tactical Deck Analysis Experience y Coherencia Visual de Gestión.
 - **8A — Release Readiness & Roadmap Realignment** (Hito de decisión y auditoría de producto).
 - **8C — SEO & Discovery Readiness — completada**: Sitemap dinámico (`sitemap.xml`), `robots.txt` controlado por Django, enlaces canónicos limpios (`<link rel="canonical">`) y coherencia `noindex` en áreas privadas/borradores.
+- **8D.1 — Production Architecture & Deployment Audit — completada**: Auditoría de infraestructura, aprobación de PythonAnywhere + SQLite y diseño de despliegue.
+- **8D.2 — Production Configuration Implementation — completada**: Preparación de `production.py`, HSTS progresivo, logging a consola, plantillas 404/500, `/health/` y guía de despliegue.
 
 ### 2. PRE-LANZAMIENTO (Recomendado antes del despliegue oficial)
 - **8B — Experimento de contenido real & flujo táctico (HOLD)**: Suspendido temporalmente hasta la estabilización de las reglas/cartas definitivas del juego.
-- **8D — Production Readiness**: Configuración de `production.py`, servido de archivos estáticos (WhiteNoise), base de datos de producción (PostgreSQL) y variables de entorno.
+- **8D.3 — Deployment Execution (PythonAnywhere)**: Ejecución del despliegue real en PythonAnywhere (requiere aprobación humana).
 - **8E — Auditoría transversal pre-lanzamiento**: Verificación final de seguridad, performance y checklist de despliegue.
 
 ### 3. POST-LANZAMIENTO / CONDICIONAL (Solo bajo demanda de usuarios)
@@ -38,7 +40,9 @@ Cada fase se cierra con alcance definido, pruebas proporcionales, documentación
 | 7A–7I.1 | Ecosistema de Mazos — **completada** | Builder interactivo, Ficha Táctica, Biblioteca pública, Editor Editorial y Análisis 7I. Módulo congelado. |
 | 8A | Auditoría y Realineación — **completada** | Auditoría de producto, congelación de Mazos y propuesta de roadmap aprobada. |
 | 8C | SEO & Discovery Readiness — **completada** | Sitemap.xml, robots.txt, canonicals y meta robots sin dependencias externas ni cambios de esquema. |
-| 8D | Production Readiness | Configuración segura, observabilidad, estáticos/media, despliegue y plan de recuperación. |
+| 8D.1 | Production Architecture Audit — **completada** | Auditoría técnica y aprobación de arquitectura PythonAnywhere + SQLite. |
+| 8D.2 | Production Configuration — **completada** | Settings de producción, HSTS progresivo, logging consola, 404/500, /health/ y guía de despliegue. |
+| 8D.3 | Deployment Execution | Ejecución del despliegue en PythonAnywhere tras aprobación humana. |
 
 ## Ajuste razonado
 

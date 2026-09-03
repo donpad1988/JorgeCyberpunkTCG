@@ -23,3 +23,12 @@ def robots_txt(request):
         f"Sitemap: {sitemap_url}\n"
     )
     return HttpResponse(content, content_type="text/plain; charset=utf-8")
+
+
+def health_check(request):
+    """Serve cheap system status health check for production monitoring."""
+    from django.http import JsonResponse
+
+    response = JsonResponse({"status": "healthy"})
+    response["X-Robots-Tag"] = "noindex, nofollow"
+    return response

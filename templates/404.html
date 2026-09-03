@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}404 // Señal no encontrada | Jorge CyberpunkTCG{% endblock %}
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+{% block content %}
+<section class="auth-shell">
+  <div class="auth-panel">
+    <p class="auth-kicker">SYSTEM ERROR // 404</p>
+    <h1>SEÑAL NO ENCONTRADA</h1>
+    <p>El nodo o recurso que intentas localizar no existe en la red del Cyberdeck.</p>
+    <p class="muted">Verifica la dirección ingresada o regresa al terminal principal.</p>
+    <div class="auth-links">
+      <a class="button" href="{% url 'core:home' %}">Volver al inicio</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

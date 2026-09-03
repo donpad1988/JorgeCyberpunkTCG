@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}500 // Fallo del sistema | Jorge CyberpunkTCG{% endblock %}
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+{% block content %}
+<section class="auth-shell">
+  <div class="auth-panel">
+    <p class="auth-kicker">CRITICAL FAULT // 500</p>
+    <h1>FALLO DEL SISTEMA</h1>
+    <p>La terminal encontró un error interno al procesar tu solicitud.</p>
+    <p class="muted">El incidente ha sido registrado en la consola de auditoría.</p>
+    <div class="auth-links">
+      <a class="button" href="{% url 'core:home' %}">Volver al inicio</a>
+    </div>
+  </div>
+</section>
+{% endblock %}
