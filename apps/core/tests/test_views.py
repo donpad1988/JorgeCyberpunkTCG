@@ -28,7 +28,7 @@ class HomeViewTests(TestCase):
             response,
             'Choomdex Hispano</h3><p>Base de datos táctica de cartas en español.</p><span class="badge badge--green">En desarrollo</span>',
         )
-        self.assertContains(response, 'Deck Builder</h3><p>Construcción y análisis de mazos.</p><span class="badge badge--green">En desarrollo</span>')
+        self.assertContains(response, f'href="{reverse("decks:public_decks")}">Ver mazos públicos</a>')
         self.assertContains(response, "Comunidad · Próximamente")
 
     def test_footer_links_to_editorial_modules_without_future_labels(self):

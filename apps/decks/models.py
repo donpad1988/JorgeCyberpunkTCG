@@ -28,6 +28,7 @@ class Deck(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+        DeckEditorialProfile.objects.get_or_create(deck=self)
 
 
 class DeckLegend(models.Model):
@@ -75,6 +76,50 @@ class DeckEntry(models.Model):
             errors["quantity"] = "Una Card lógica no puede superar tres copias en el mazo principal."
         if errors:
             raise ValidationError(errors)
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+
+class DeckEditorialProfile(models.Model):
+    """Contenido editorial propio que acompaña, sin alterar, la composición."""
+
+    deck = models.OneToOneField(Deck, on_delete=models.CASCADE, related_name="editorial_profile")
+    archetype = models.CharField(max_length=160, blank=True)
+    short_summary = models.CharField(max_length=320, blank=True)
+    strategy_overview = models.TextField(blank=True)
+    game_plan = models.TextField(blank=True)
+    strengths = models.TextField(blank=True)
+    weaknesses = models.TextField(blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Editorial: {self.deck}"
+
+
+class DeckKeyCard(models.Model):
+    profile = models.ForeignKey(DeckEditorialProfile, on_delete=models.CASCADE, related_name="key_cards")
+    card = models.ForeignKey(Card, on_delete=models.PROTECT, related_name="deck_key_card_entries")
+    editorial_note = models.TextField(blank=True)
+    display_order = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        ordering = ("display_order", "card__name")
+        constraints = [
+            models.UniqueConstraint(fields=("profile", "card"), name="decks_unique_key_card_per_profile"),
+        ]
+
+    def __str__(self):
+        return f"{self.profile.deck}: {self.card}"
+
+    def clean(self):
+        super().clean()
+        if self.profile_id and self.card_id:
+            deck = self.profile.deck
+            is_in_deck = deck.legends.filter(card_id=self.card_id).exists() or deck.entries.filter(card_id=self.card_id).exists()
+            if not is_in_deck:
+                raise ValidationError({"card": "La carta clave debe formar parte de la composición del mazo."})
 
     def save(self, *args, **kwargs):
         self.full_clean()

@@ -1,18 +1,22 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db import transaction
+from django.db.models import Count
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.cards.models import Card, Set
 
-from .forms import CardActionForm, DeckMetadataForm, EntryActionForm
-from .models import Deck
+from .forms import CardActionForm, DeckEditorialForm, DeckKeyCardFormSet, DeckMetadataForm, EntryActionForm
+from .models import Deck, DeckEditorialProfile
 from .services import DeckCompositionError, DeckCompositionService, DeckValidationService
 
 
 def get_visible_deck_or_404(request, username, slug):
     deck = get_object_or_404(
-        Deck.objects.select_related("owner").prefetch_related("legends__card", "entries__card"),
+        Deck.objects.select_related("owner", "editorial_profile").prefetch_related(
+            "legends__card", "entries__card", "editorial_profile__key_cards__card"
+        ),
         owner__username=username,
         slug=slug,
     )
@@ -37,7 +41,9 @@ def my_decks(request):
 
 
 def public_decks(request):
-    decks = Deck.objects.filter(is_public=True).select_related("owner").order_by("-updated_at", "name")
+    decks = Deck.objects.filter(is_public=True).select_related("owner", "editorial_profile").annotate(
+        legend_count=Count("legends", distinct=True), main_count=Count("entries", distinct=True)
+    ).order_by("-updated_at", "name")
     return render(request, "decks/public_deck_list.html", {"decks": decks})
 
 
@@ -55,7 +61,15 @@ def deck_create(request):
 def deck_detail(request, username, slug):
     deck = get_visible_deck_or_404(request, username, slug)
     validation = DeckValidationService(deck).validate()
-    return render(request, "decks/deck_detail.html", {"deck": deck, "validation": validation})
+    legends = sorted(deck.legends.all(), key=lambda legend: legend.card.name.lower())
+    entries = sorted(deck.entries.all(), key=lambda entry: (entry.card.card_type, entry.card.name.lower()))
+    cards = [legend.card for legend in legends] + [entry.card for entry in entries]
+    public_card_ids = set(Card.objects.public().filter(pk__in=[card.pk for card in cards]).values_list("pk", flat=True))
+    return render(
+        request,
+        "decks/deck_detail.html",
+        {"deck": deck, "validation": validation, "public_card_ids": public_card_ids, "legends": legends, "entries": entries},
+    )
 
 
 @login_required
@@ -146,6 +160,20 @@ def deck_update(request, username, slug):
         form.save()
         return redirect("decks:deck_detail", username=deck.owner.username, slug=deck.slug)
     return render(request, "decks/deck_form.html", {"form": form, "deck": deck, "heading": "Editar mazo"})
+
+
+@login_required
+def deck_editorial_update(request, username, slug):
+    deck = get_owned_deck_or_404(request, username, slug)
+    profile, _ = DeckEditorialProfile.objects.get_or_create(deck=deck)
+    form = DeckEditorialForm(request.POST or None, instance=profile)
+    formset = DeckKeyCardFormSet(request.POST or None, instance=profile, deck=deck)
+    if request.method == "POST" and form.is_valid() and formset.is_valid():
+        with transaction.atomic():
+            form.save()
+            formset.save()
+        return redirect("decks:deck_detail", username=deck.owner.username, slug=deck.slug)
+    return render(request, "decks/deck_editorial_form.html", {"deck": deck, "form": form, "formset": formset})
 
 
 @login_required

@@ -9,6 +9,7 @@ urlpatterns = [
     path("mazos/publicos/", views.public_decks, name="public_decks"),
     path("mazos/crear/", views.deck_create, name="deck_create"),
     path("mazos/<str:username>/<slug:slug>/construir/", views.deck_builder, name="deck_builder"),
+    path("mazos/<str:username>/<slug:slug>/editorial/", views.deck_editorial_update, name="deck_editorial_update"),
     path("mazos/<str:username>/<slug:slug>/legend/anadir/", views.legend_add, name="legend_add"),
     path("mazos/<str:username>/<slug:slug>/legend/retirar/", views.legend_remove, name="legend_remove"),
     path("mazos/<str:username>/<slug:slug>/main/anadir/", views.main_add, name="main_add"),

@@ -25,6 +25,10 @@ Cada fase se cierra con alcance definido, pruebas proporcionales, documentación
 | 7B | Fundación técnica Deck Builder — **completada** | Modelos, constraints, servicio estructural, Admin y pruebas; RAM permanece sin evaluar. |
 | 7C | CRUD y seguridad Deck Builder — **completada** | Metadata, privacidad, ownership, navegación y composición read-only; RAM permanece sin evaluar. |
 | 7D | Builder interactivo de mazos — **completada** | Composición SSR segura, límites estructurales, búsqueda y filtros; RAM permanece sin evaluar. |
+| 7E | Tactical Deck File / Biblioteca editorial — **completada** | El detalle público es una ficha táctica editorial; Builder se conserva como infraestructura privada del owner. |
+| 7F | Deck ↔ YouTube | Relación editorial explícita con videos, sólo tras definir el contrato de contenido. |
+| 7G | Enriquecimiento editorial | Cartas clave, sinergias y planes adicionales según feedback de jugadores. |
+| Futuro opcional | RAM Analyzer | Despriorizado: requiere valor agregado real, reglas verificadas y feedback antes de reabrir el gate. |
 | Futuro | INGESTA CONTROLADA DE DATOS CHOOMDEX — SUSPENDIDA HASTA DISPONER DE FUENTE AUTORIZADA | Requiere Card/CardPrinting estable, fuente aprobada, deduplicación, dry-run, idempotencia y tests. |
 | 6 | Choomdex | Catálogo con procedencia de datos, filtros y estados explícitos de datos ausentes. |
 | 7 | Deck Builder | Mazos, restricciones configurables y validación servidor. |
@@ -39,6 +43,8 @@ Cada fase se cierra con alcance definido, pruebas proporcionales, documentación
 ## Ajuste razonado
 
 Se conserva el orden conceptual. La Fase 1 debe fijar el usuario personalizado antes de cualquier migración, aunque el flujo de autenticación visible se posponga a la Fase 3. La Fase 13 no sustituye los controles previos: consolida una auditoría transversal final.
+
+Desde 7E el proyecto **no busca competir con el Deck Builder oficial**. Mazos es principalmente una biblioteca táctica/editorial conectable al contenido propio de YouTube; el Builder queda como infraestructura para preparar y mantener composiciones.
 
 ## Hitos de decisión previos a módulos con datos externos
 
