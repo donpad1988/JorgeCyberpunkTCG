@@ -7,10 +7,13 @@ class CardPrintingDataMigrationTests(TransactionTestCase):
     reset_sequences = True
 
     def migration_targets(self, cards_migration):
-        executor = MigrationExecutor(connection)
-        return [
-            node for node in executor.loader.graph.leaf_nodes() if node[0] != "cards"
-        ] + [("cards", cards_migration)]
+        """Return an isolated historical target for the cards app.
+
+        Including every other app's leaf migration makes their dependencies pull
+        cards forward to its current contract, so it cannot exercise Card's
+        legacy fields from 0001_initial.
+        """
+        return [("cards", cards_migration)]
 
     def setUp(self):
         executor = MigrationExecutor(connection)
@@ -18,6 +21,9 @@ class CardPrintingDataMigrationTests(TransactionTestCase):
         old_apps = executor.loader.project_state(self.migration_targets("0001_initial")).apps
         OldSet = old_apps.get_model("cards", "Set")
         OldCard = old_apps.get_model("cards", "Card")
+        self.assertTrue({"set", "collector_number", "cost", "ram", "power"}.issubset(
+            {field.name for field in OldCard._meta.get_fields()}
+        ))
         card_set = OldSet.objects.create(
             name="Welcome to Night City — Retail",
             slug="welcome-to-night-city-retail",

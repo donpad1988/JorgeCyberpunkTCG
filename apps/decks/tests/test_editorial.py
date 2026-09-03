@@ -120,6 +120,6 @@ class DeckEditorialViewTests(DeckTestMixin, TestCase):
 
         response = self.client.get(reverse("decks:public_decks"))
 
-        self.assertContains(response, "Biblioteca de mazos")
+        self.assertContains(response, 'id="published-decks-title"')
         self.assertContains(response, "Resumen editorial propio.")
         self.assertNotContains(response, private.name)
