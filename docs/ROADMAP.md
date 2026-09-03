@@ -31,7 +31,7 @@ Cada fase se cierra con alcance definido, pruebas proporcionales, documentación
 | 7H | Tactical Deck Library — **completada** | Biblioteca pública editorial, búsqueda segura, archivo histórico y descubrimiento de Tactical Deck Files. |
 | 7H.1 | Pulido visual Tactical Deck Library — **completada** | Buscador condicional y estados editoriales encapsulados sin ampliar el dominio. |
 | 7H.2 | Pulido UX del editor de Tactical Deck File — **completada** | Editor editorial tematizado, labels en español y formset de Cartas clave preservado. |
-| 7I | Integración editorial transversal — **pendiente** | Evolución de relaciones editoriales tras validar el flujo de lanzamiento. |
+| 7I | Tactical Deck Analysis Experience — **completada** | Ficha táctica canónica prioriza análisis, Cartas clave y navegación editorial a Choomdex y Videos. |
 | Futuro opcional | RAM Analyzer | Despriorizado: requiere valor agregado real, reglas verificadas y feedback antes de reabrir el gate. |
 | Futuro | INGESTA CONTROLADA DE DATOS CHOOMDEX — SUSPENDIDA HASTA DISPONER DE FUENTE AUTORIZADA | Requiere Card/CardPrinting estable, fuente aprobada, deduplicación, dry-run, idempotencia y tests. |
 | 6 | Choomdex | Catálogo con procedencia de datos, filtros y estados explícitos de datos ausentes. |

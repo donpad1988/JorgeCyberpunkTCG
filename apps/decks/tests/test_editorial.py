@@ -90,6 +90,47 @@ class DeckEditorialViewTests(DeckTestMixin, TestCase):
         self.assertContains(response, reverse("cards:detail", args=[self.main.slug]))
         self.assertNotContains(response, "Editar contenido")
 
+    def test_public_tactical_file_prioritizes_editorial_analysis_before_composition(self):
+        response = self.client.get(self.urls()["detail"])
+        content = response.content.decode()
+
+        self.assertContains(response, "Resumen táctico")
+        self.assertContains(response, "Estrategia editorial propia.")
+        self.assertContains(response, "Plan flexible propio.")
+        self.assertContains(response, "Fortaleza propia.")
+        self.assertContains(response, "Debilidad propia.")
+        self.assertContains(response, "Carta clave propia.")
+        self.assertLess(content.index('id="strategy-title"'), content.index('id="composition-title"'))
+        self.assertLess(content.index('id="key-cards-title"'), content.index('id="composition-title"'))
+
+    def test_empty_editorial_fields_are_omitted_without_empty_public_sections(self):
+        profile = self.deck.editorial_profile
+        profile.short_summary = ""
+        profile.strategy_overview = ""
+        profile.game_plan = ""
+        profile.strengths = ""
+        profile.weaknesses = ""
+        profile.save()
+        profile.key_cards.all().delete()
+
+        response = self.client.get(self.urls()["detail"])
+
+        self.assertEqual(response.status_code, 200)
+        for section_id in (
+            "tactical-summary-title", "strategy-title", "game-plan-title", "strengths-title", "weaknesses-title", "key-cards-title",
+        ):
+            self.assertNotContains(response, section_id)
+        self.assertContains(response, "Composición del mazo")
+
+    def test_non_public_card_in_public_deck_has_no_choomdex_link(self):
+        self.main.status = "DRAFT"
+        self.main.save()
+
+        response = self.client.get(self.urls()["detail"])
+
+        self.assertContains(response, self.main.name)
+        self.assertNotContains(response, reverse("cards:detail", args=[self.main.slug]))
+
     def test_private_deck_and_editorial_are_owner_only(self):
         self.deck.is_public = False
         self.deck.save()
