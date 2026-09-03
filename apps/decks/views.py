@@ -1,7 +1,9 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db import transaction
-from django.db.models import Count, Prefetch
+from django.db import models, transaction
+from django.core.paginator import Paginator
+from django.db.models import Count, Exists, IntegerField, OuterRef, Prefetch, Subquery, Sum, Value
+from django.db.models.functions import Coalesce
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -9,7 +11,7 @@ from apps.cards.models import Card, Set
 from apps.videos.models import Video
 
 from .forms import CardActionForm, DeckEditorialForm, DeckKeyCardFormSet, DeckMetadataForm, EntryActionForm
-from .models import Deck, DeckEditorialProfile
+from .models import Deck, DeckEditorialProfile, DeckEntry
 from .services import DeckCompositionError, DeckCompositionService, DeckValidationService
 
 
@@ -48,12 +50,30 @@ def my_decks(request):
 
 
 def public_decks(request):
-    base_query = Deck.objects.filter(is_public=True).select_related("owner", "editorial_profile").annotate(
-        legend_count=Count("legends", distinct=True), main_count=Count("entries", distinct=True)
+    query = request.GET.get("q", "").strip()
+    main_totals = DeckEntry.objects.filter(deck=OuterRef("pk")).values("deck").annotate(total=Sum("quantity")).values("total")
+    active_videos = Video.objects.filter(is_active=True, related_decks=OuterRef("pk"))
+    annotations = {
+        "legend_count": Count("legends", distinct=True),
+        "main_count": Coalesce(Subquery(main_totals, output_field=IntegerField()), Value(0)),
+        "has_active_video": Exists(active_videos),
+    }
+    base_query = Deck.objects.select_related("owner", "editorial_profile").annotate(**annotations)
+    decks = base_query.public_current()
+    if query:
+        decks = decks.filter(
+            models.Q(name__icontains=query)
+            | models.Q(editorial_profile__archetype__icontains=query)
+            | models.Q(editorial_profile__short_summary__icontains=query)
+        )
+    decks = decks.order_by("-updated_at", "name")
+    page_obj = Paginator(decks, 12).get_page(request.GET.get("page"))
+    archived_decks = base_query.public_archive().order_by("-updated_at", "name")
+    return render(
+        request,
+        "decks/public_deck_list.html",
+        {"decks": page_obj, "page_obj": page_obj, "archived_decks": archived_decks, "q": query},
     )
-    decks = base_query.filter(editorial_status=Deck.EditorialStatus.PUBLISHED).order_by("-updated_at", "name")
-    archived_decks = base_query.filter(editorial_status=Deck.EditorialStatus.ARCHIVED).order_by("-updated_at", "name")
-    return render(request, "decks/public_deck_list.html", {"decks": decks, "archived_decks": archived_decks})
 
 
 @login_required

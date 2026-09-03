@@ -6,6 +6,14 @@ from django.utils.text import slugify
 from apps.cards.models import Card
 
 
+class DeckQuerySet(models.QuerySet):
+    def public_current(self):
+        return self.filter(is_public=True, editorial_status=Deck.EditorialStatus.PUBLISHED)
+
+    def public_archive(self):
+        return self.filter(is_public=True, editorial_status=Deck.EditorialStatus.ARCHIVED)
+
+
 class Deck(models.Model):
     class EditorialStatus(models.TextChoices):
         DRAFT = "DRAFT", "Borrador"
@@ -20,6 +28,8 @@ class Deck(models.Model):
     editorial_status = models.CharField(max_length=10, choices=EditorialStatus.choices, default=EditorialStatus.DRAFT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    objects = DeckQuerySet.as_manager()
 
     class Meta:
         ordering = ("-updated_at", "name")
