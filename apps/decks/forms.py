@@ -20,3 +20,11 @@ class DeckMetadataForm(forms.ModelForm):
             if Deck.objects.filter(owner=self.owner, slug=slug).exists():
                 raise forms.ValidationError("Ya tienes un mazo con este nombre.")
         return name
+
+
+class CardActionForm(forms.Form):
+    card_id = forms.IntegerField(min_value=1)
+
+
+class EntryActionForm(forms.Form):
+    entry_id = forms.IntegerField(min_value=1)

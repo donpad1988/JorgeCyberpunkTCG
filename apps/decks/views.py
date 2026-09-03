@@ -1,10 +1,13 @@
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
-from .forms import DeckMetadataForm
+from apps.cards.models import Card, Set
+
+from .forms import CardActionForm, DeckMetadataForm, EntryActionForm
 from .models import Deck
-from .services import DeckValidationService
+from .services import DeckCompositionError, DeckCompositionService, DeckValidationService
 
 
 def get_visible_deck_or_404(request, username, slug):
@@ -53,6 +56,86 @@ def deck_detail(request, username, slug):
     deck = get_visible_deck_or_404(request, username, slug)
     validation = DeckValidationService(deck).validate()
     return render(request, "decks/deck_detail.html", {"deck": deck, "validation": validation})
+
+
+@login_required
+def deck_builder(request, username, slug):
+    deck = get_owned_deck_or_404(request, username, slug)
+    query = request.GET.get("q", "").strip()
+    card_type = request.GET.get("type", "")
+    set_slug = request.GET.get("set", "")
+    cards = Card.objects.public().exclude(card_type=Card.CardType.LEGEND)
+    if query:
+        cards = cards.filter(name__icontains=query)
+    if card_type in Card.CardType.values and card_type != Card.CardType.LEGEND:
+        cards = cards.filter(card_type=card_type)
+    if set_slug:
+        cards = cards.filter(printings__is_primary=True, printings__set__slug=set_slug)
+    cards = cards.distinct()
+    sets = Set.objects.filter(
+        is_active=True,
+        printings__is_primary=True,
+        printings__card__status=Card.Status.PUBLISHED,
+    ).distinct()
+    legends = Card.objects.public().filter(card_type=Card.CardType.LEGEND)
+    validation = DeckValidationService(deck).validate()
+    return render(
+        request,
+        "decks/deck_builder.html",
+        {
+            "deck": deck,
+            "validation": validation,
+            "available_legends": legends,
+            "available_cards": cards,
+            "sets": sets,
+            "q": query,
+            "card_type": card_type,
+            "set_slug": set_slug,
+            "types": Card.CardType.choices,
+        },
+    )
+
+
+def _composition_action(request, username, slug, form_class, method, success_message):
+    if request.method != "POST":
+        raise Http404
+    deck = get_owned_deck_or_404(request, username, slug)
+    form = form_class(request.POST)
+    if not form.is_valid():
+        messages.error(request, "La acción recibida no es válida.")
+        return redirect("decks:deck_builder", username=deck.owner.username, slug=deck.slug)
+    try:
+        getattr(DeckCompositionService(deck), method)(*form.cleaned_data.values())
+    except DeckCompositionError as exc:
+        messages.error(request, str(exc))
+    else:
+        messages.success(request, success_message)
+    return redirect("decks:deck_builder", username=deck.owner.username, slug=deck.slug)
+
+
+@login_required
+def legend_add(request, username, slug):
+    return _composition_action(request, username, slug, CardActionForm, "add_legend", "Legend añadida.")
+
+
+@login_required
+def legend_remove(request, username, slug):
+    return _composition_action(request, username, slug, EntryActionForm, "remove_legend", "Legend retirada.")
+
+
+@login_required
+def main_add(request, username, slug):
+    return _composition_action(request, username, slug, CardActionForm, "add_main_card", "Carta añadida al MAIN.")
+
+
+@login_required
+def main_decrement(request, username, slug):
+    return _composition_action(request, username, slug, EntryActionForm, "decrement_main_card", "Cantidad del MAIN actualizada.")
+
+
+@login_required
+def main_remove(request, username, slug):
+    return _composition_action(request, username, slug, EntryActionForm, "remove_main_card", "Carta retirada del MAIN.")
 
 
 @login_required

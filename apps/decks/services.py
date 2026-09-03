@@ -1,6 +1,10 @@
 from dataclasses import dataclass
 
 from apps.cards.models import Card
+from django.db import transaction
+from django.db.models import Sum
+
+from .models import DeckEntry, DeckLegend
 
 
 RAM_NOT_EVALUATED = "NOT_EVALUATED"
@@ -65,3 +69,76 @@ class DeckValidationService:
             warnings=tuple(dict.fromkeys(warnings)),
             summary=summary,
         )
+
+
+class DeckCompositionError(Exception):
+    pass
+
+
+class DeckCompositionService:
+    def __init__(self, deck):
+        self.deck = deck
+
+    def _eligible_card(self, card_id):
+        try:
+            card = Card.objects.get(pk=card_id)
+        except Card.DoesNotExist as exc:
+            raise DeckCompositionError("La carta solicitada no existe.") from exc
+        if not is_card_eligible(card):
+            raise DeckCompositionError("Esta carta ya no está disponible para nuevas selecciones.")
+        return card
+
+    @transaction.atomic
+    def add_legend(self, card_id):
+        card = self._eligible_card(card_id)
+        if card.card_type != Card.CardType.LEGEND:
+            raise DeckCompositionError("Solo una Legend puede ocupar esta sección.")
+        legends = DeckLegend.objects.select_for_update().filter(deck=self.deck)
+        if legends.filter(card=card).exists():
+            raise DeckCompositionError("Esta Legend ya está seleccionada.")
+        if legends.count() >= 3:
+            raise DeckCompositionError("Ya seleccionaste 3 Legends.")
+        DeckLegend.objects.create(deck=self.deck, card=card)
+
+    @transaction.atomic
+    def remove_legend(self, legend_id):
+        try:
+            DeckLegend.objects.select_for_update().get(pk=legend_id, deck=self.deck).delete()
+        except DeckLegend.DoesNotExist as exc:
+            raise DeckCompositionError("La Legend no pertenece a este mazo.") from exc
+
+    @transaction.atomic
+    def add_main_card(self, card_id):
+        card = self._eligible_card(card_id)
+        if card.card_type == Card.CardType.LEGEND:
+            raise DeckCompositionError("Las Legends no forman parte del mazo principal.")
+        entries = DeckEntry.objects.select_for_update().filter(deck=self.deck)
+        main_count = entries.aggregate(total=Sum("quantity"))["total"] or 0
+        if main_count >= 50:
+            raise DeckCompositionError("El MAIN ya alcanzó 50 cartas.")
+        entry = entries.filter(card=card).first()
+        if entry is None:
+            DeckEntry.objects.create(deck=self.deck, card=card, quantity=1)
+            return
+        if entry.quantity >= 3:
+            raise DeckCompositionError("Esta carta ya tiene 3 copias.")
+        entry.quantity += 1
+        entry.save(update_fields=("quantity",))
+
+    @transaction.atomic
+    def decrement_main_card(self, entry_id):
+        try:
+            entry = DeckEntry.objects.select_for_update().get(pk=entry_id, deck=self.deck)
+        except DeckEntry.DoesNotExist as exc:
+            raise DeckCompositionError("La entrada no pertenece a este mazo.") from exc
+        if entry.quantity == 1:
+            entry.delete()
+            return
+        entry.quantity -= 1
+        entry.save(update_fields=("quantity",))
+
+    @transaction.atomic
+    def remove_main_card(self, entry_id):
+        deleted, _ = DeckEntry.objects.filter(pk=entry_id, deck=self.deck).delete()
+        if not deleted:
+            raise DeckCompositionError("La entrada no pertenece a este mazo.")
