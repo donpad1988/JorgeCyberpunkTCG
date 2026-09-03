@@ -71,6 +71,12 @@ class Card(models.Model):
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
+    def get_absolute_url(self):
+        from django.urls import reverse
+
+        return reverse("cards:detail", kwargs={"slug": self.slug})
+
+
 
 class CardPrinting(models.Model):
     card = models.ForeignKey(Card, on_delete=models.CASCADE, related_name="printings")

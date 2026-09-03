@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Eliminar {{ deck.name }} | Jorge CyberpunkTCG{% endblock %}
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
 {% block content %}
 <section class="section"><div class="container"><p class="eyebrow">DECKS // CONFIRM DELETE</p><h1>Eliminar {{ deck.name }}</h1><p>Esta acción eliminará el mazo y su composición guardada.</p><form method="post">{% csrf_token %}<button class="button" type="submit">Confirmar eliminación</button> <a class="button button--ghost" href="{% url 'decks:deck_detail' deck.owner.username deck.slug %}">Cancelar</a></form></div></section>
 {% endblock %}

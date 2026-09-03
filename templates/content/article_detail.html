@@ -2,5 +2,6 @@
 {% load static %}
 {% block title %}{{ article.title }} | Jorge CyberpunkTCG{% endblock %}
 {% block meta_description %}{{ article.summary }}{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ article.get_absolute_url }}">{% endblock %}
 {% block extra_css %}<link rel="stylesheet" href="{% static 'css/content.css' %}">{% endblock %}
 {% block content %}<article class="article-detail"><header class="content-header"><div class="container reading-width"><p class="eyebrow">TACTICAL FILE // {{ article.get_article_type_display }}</p><span class="badge">{{ article.get_article_type_display }}</span><h1>{{ article.title }}</h1><p class="article-summary">{{ article.summary }}</p><p class="article-meta">{{ article.category }} · {{ article.author.username }} · <time datetime="{{ article.published_at|date:'c' }}">Publicado {{ article.published_at|date:"d/m/Y" }}</time>{% if article.updated_at != article.created_at %} · Actualizado {{ article.updated_at|date:"d/m/Y" }}{% endif %}</p></div></header><div class="container reading-width article-body">{{ article.body|linebreaks }}</div></article>{% endblock %}

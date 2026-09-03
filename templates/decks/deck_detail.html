@@ -2,7 +2,7 @@
 {% load static %}
 {% block title %}{{ deck.name }} | Tactical Deck File | Jorge CyberpunkTCG{% endblock %}
 {% block meta_description %}{% if deck.editorial_profile.short_summary %}{{ deck.editorial_profile.short_summary }}{% elif deck.description %}{{ deck.description }}{% else %}Ficha táctica de {{ deck.name }} por {{ deck.owner.username }}.{% endif %}{% endblock %}
-{% if not deck.is_public or deck.editorial_status != 'PUBLISHED' %}{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}{% endif %}
+{% if not deck.is_public or deck.editorial_status != 'PUBLISHED' %}{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}{% else %}{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ deck.get_absolute_url }}">{% endblock %}{% endif %}
 {% block extra_css %}<link rel="stylesheet" href="{% static 'css/decks.css' %}">{% endblock %}
 {% block content %}
 <section class="section tactical-deck-file"><div class="container">

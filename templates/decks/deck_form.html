@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}{{ heading }} | {% if deck %}{{ deck.name }} | {% endif %}Jorge CyberpunkTCG{% endblock %}
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
 {% block extra_css %}<link rel="stylesheet" href="{% static 'css/decks.css' %}">{% endblock %}
 {% block content %}
 <section class="section deck-metadata"><div class="container deck-metadata__container">

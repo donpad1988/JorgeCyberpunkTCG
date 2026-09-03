@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}Editar contenido | {{ deck.name }} | Jorge CyberpunkTCG{% endblock %}
+{% block robots %}<meta name="robots" content="noindex, nofollow">{% endblock %}
 {% block extra_css %}<link rel="stylesheet" href="{% static 'css/decks.css' %}">{% endblock %}
 {% block content %}
 <section class="section deck-editor"><div class="container deck-editor__container">

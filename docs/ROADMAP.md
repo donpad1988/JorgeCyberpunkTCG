@@ -2,7 +2,29 @@
 
 ## Método de ejecución
 
-Cada fase se cierra con alcance definido, pruebas proporcionales, documentación de decisiones y verificación. Una fase no se considera completada por tener interfaz: debe cumplir sus controles de seguridad, datos y mantenimiento correspondientes.
+Cada fase se cierra con alcance definido, pruebas proporcionales, documentación de decisiones y verificación. Una fase no se considera completada por tener interfaz: debe cumplir sus controles de seguridad, datos y mantenimiento correspondien## Estrategia y Categorización del Roadmap
+
+### 1. COMPLETADO
+- **0 → 7I.1**: Fundación técnica, Usuarios, Guías, YouTube, MVP Choomdex (Card/CardPrinting), Deck Builder CRUD/Interactivo, Tactical Deck File, Tactical Deck Library, Editor Editorial, Tactical Deck Analysis Experience y Coherencia Visual de Gestión.
+- **8A — Release Readiness & Roadmap Realignment** (Hito de decisión y auditoría de producto).
+- **8C — SEO & Discovery Readiness — completada**: Sitemap dinámico (`sitemap.xml`), `robots.txt` controlado por Django, enlaces canónicos limpios (`<link rel="canonical">`) y coherencia `noindex` en áreas privadas/borradores.
+
+### 2. PRE-LANZAMIENTO (Recomendado antes del despliegue oficial)
+- **8B — Experimento de contenido real & flujo táctico (HOLD)**: Suspendido temporalmente hasta la estabilización de las reglas/cartas definitivas del juego.
+- **8D — Production Readiness**: Configuración de `production.py`, servido de archivos estáticos (WhiteNoise), base de datos de producción (PostgreSQL) y variables de entorno.
+- **8E — Auditoría transversal pre-lanzamiento**: Verificación final de seguridad, performance y checklist de despliegue.
+
+### 3. POST-LANZAMIENTO / CONDICIONAL (Solo bajo demanda de usuarios)
+- **Fase 9 — Comunidad (MVP)**: Comentarios moderados, reportes y antiabuso (exige tráfico y audiencia activa previa).
+- **Fase 10 — Gamificación y Netrunner Dashboard**: Street Cred, Eddies, avatares y recompensas comunitarias.
+
+### 4. BLOQUEADO POR FUENTES EXTERNAS / NO-GO ACTUAL
+- **INGESTA MASIVA DE CHOOMDEX**: Suspendida hasta disponer de fuente oficial autorizada o API directa.
+- **RAM ANALYZER**: Despriorizado (`NOT_EVALUATED`) a la espera de reglas oficiales verificadas.
+
+---
+
+## Cuadro de Registro de Fases
 
 | Fase | Resultado esperado | Condición de cierre |
 |---|---|---|
@@ -12,38 +34,11 @@ Cada fase se cierra con alcance definido, pruebas proporcionales, documentación
 | 3 | Usuarios y autenticación — **completada** | Registro, acceso, recuperación y perfil base con permisos verificados. |
 | 4 | Guías y estrategias — **completada** | Modelo editorial, categorías, slugs, administración y páginas indexables. |
 | 5 | Integración editorial con YouTube — **completada** | Metadatos propios y relaciones con guías sin depender de API externa. |
-| 6A | Diseño y auditoría Choomdex — **completada** | Arquitectura, política de fuentes y MVP definidos sin implementar datos. |
-| 6A.1 | Verificación de fuentes Choomdex — **completada** | Contrato 6B refinado con fuentes oficiales; sin implementación. |
-| 6B | MVP Choomdex — **completada** | Catálogo y administración vacíos con datos verificados manualmente. |
-| 6C.1 | Dataset piloto Choomdex — **completada** | Un Set y cuatro Cards documentados desde fuentes oficiales; sin carga automática de datos. |
-| 6C.3 | Presentación táctica Choomdex — **completada** | Grid HUD, ficha táctica y atributos condicionales sin alterar datos ni modelo. |
-| 6D.1 | Arquitectura Card vs CardPrinting — **completada** | Decisión trazable para identidad, impresión y Set; migración condicionada a gates de verificación. |
-| 6D.2 | Verificación de identidad, printings y taxonomías — **completada** | Evidencia oficial y gates revisados; diseño de migración permitido sólo con condiciones. |
-| 6D.3 | Diseño de migración CardPrinting — **completada** | Plan expand–migrate–contract reversible para el piloto, sin ejecutar cambios técnicos. |
-| 6D.4 | Implementación controlada CardPrinting — **completada** | CardPrinting, migraciones controladas, consumidores, admin y regresión verificados sin ampliar el dominio. |
-| 7A | Diseño funcional y arquitectura Deck Builder — **completada** | Diseño de dominio, seguridad, UX y gates; implementación RAM condicionada a reglas/datos verificables. |
-| 7B | Fundación técnica Deck Builder — **completada** | Modelos, constraints, servicio estructural, Admin y pruebas; RAM permanece sin evaluar. |
-| 7C | CRUD y seguridad Deck Builder — **completada** | Metadata, privacidad, ownership, navegación y composición read-only; RAM permanece sin evaluar. |
-| 7D | Builder interactivo de mazos — **completada** | Composición SSR segura, límites estructurales, búsqueda y filtros; RAM permanece sin evaluar. |
-| 7E | Tactical Deck File / Biblioteca editorial — **completada** | El detalle público es una ficha táctica editorial; Builder se conserva como infraestructura privada del owner. |
-| 7F | Deck ↔ YouTube — **completada** | Relación editorial opcional M2M, visible sólo entre Videos activos y Decks públicos. |
-| 7G | Release-Ready Editorial — **completada** | Vigencia editorial de Decks separada de visibilidad, archivo histórico y preparación para la revisión de lanzamiento. |
-| 7H | Tactical Deck Library — **completada** | Biblioteca pública editorial, búsqueda segura, archivo histórico y descubrimiento de Tactical Deck Files. |
-| 7H.1 | Pulido visual Tactical Deck Library — **completada** | Buscador condicional y estados editoriales encapsulados sin ampliar el dominio. |
-| 7H.2 | Pulido UX del editor de Tactical Deck File — **completada** | Editor editorial tematizado, labels en español y formset de Cartas clave preservado. |
-| 7I | Tactical Deck Analysis Experience — **completada** | Ficha táctica canónica prioriza análisis, Cartas clave y navegación editorial a Choomdex y Videos. |
-| 7I.1 | Coherencia visual y semántica de gestión de mazos — **completada** | Eyebrow contextual corregido (OWNER PREVIEW / PUBLIC NETWORK / ARCHIVED RECORD) y formulario de metadata totalmente adaptado a la interfaz cibernética. |
-| Futuro opcional | RAM Analyzer | Despriorizado: requiere valor agregado real, reglas verificadas y feedback antes de reabrir el gate. |
-| Futuro | INGESTA CONTROLADA DE DATOS CHOOMDEX — SUSPENDIDA HASTA DISPONER DE FUENTE AUTORIZADA | Requiere Card/CardPrinting estable, fuente aprobada, deduplicación, dry-run, idempotencia y tests. |
-| 6 | Choomdex | Catálogo con procedencia de datos, filtros y estados explícitos de datos ausentes. |
-| 7 | Deck Builder | Mazos, restricciones configurables y validación servidor. |
-| 8 | RAM Budget Analyzer y herramientas presenciales | Analizador de RAM separado de Eddies y terminal móvil de partida. |
-| 9 | Comunidad | Comentarios/discusiones, reportes, permisos, moderación y antiabuso. |
-| 10 | Gamificación | Street Cred, Gigs, recompensas trazables y controles antiabuso. |
-| 11 | Terminal de Netrunner | Dashboard de perfil, progreso, actividad y mazos. |
-| 12 | Eventos | Gestión editorial de eventos y datos de organizadores. |
-| 13 | Auditoría transversal | SEO, seguridad, rendimiento, accesibilidad, cobertura de pruebas y revisión de dependencias. |
-| 14 | Producción | Configuración segura, observabilidad, estáticos/media, despliegue y plan de recuperación. |
+| 6A–6D.4 | MVP Choomdex & CardPrinting — **completada** | Catálogo, impresiones, sets, procedencia y gates de verificación pasados. |
+| 7A–7I.1 | Ecosistema de Mazos — **completada** | Builder interactivo, Ficha Táctica, Biblioteca pública, Editor Editorial y Análisis 7I. Módulo congelado. |
+| 8A | Auditoría y Realineación — **completada** | Auditoría de producto, congelación de Mazos y propuesta de roadmap aprobada. |
+| 8C | SEO & Discovery Readiness — **completada** | Sitemap.xml, robots.txt, canonicals y meta robots sin dependencias externas ni cambios de esquema. |
+| 8D | Production Readiness | Configuración segura, observabilidad, estáticos/media, despliegue y plan de recuperación. |
 
 ## Ajuste razonado
 

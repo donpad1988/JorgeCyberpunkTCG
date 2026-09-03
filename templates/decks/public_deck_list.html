@@ -2,6 +2,7 @@
 {% load static %}
 {% block title %}Biblioteca táctica de mazos | Jorge CyberpunkTCG{% endblock %}
 {% block meta_description %}Explora Tactical Deck Files con composición, análisis editorial, cartas clave y videos relacionados de JorgeCyberpunkTCG.{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'decks:public_decks' %}">{% endblock %}
 {% block extra_css %}<link rel="stylesheet" href="{% static 'css/decks.css' %}">{% endblock %}
 {% block content %}
 <section class="section deck-library"><div class="container">
