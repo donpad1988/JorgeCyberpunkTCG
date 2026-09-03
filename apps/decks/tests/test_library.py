@@ -77,3 +77,42 @@ class TacticalDeckLibraryTests(DeckTestMixin, TestCase):
         self.assertNotContains(library, private_archive.name)
         self.assertEqual(self.client.get(archived.get_absolute_url()).status_code, 200)
         self.assertContains(self.client.get(archived.get_absolute_url()), "Archivo táctico")
+
+    def test_search_is_hidden_when_library_has_no_published_public_decks(self):
+        response = self.client.get(reverse("decks:public_decks"))
+
+        self.assertNotContains(response, 'id="deck-library-search"')
+        self.assertContains(response, "ARCHIVO TÁCTICO EN PREPARACIÓN")
+
+    def test_draft_public_does_not_enable_search(self):
+        self.create_public_deck("Draft", status="DRAFT")
+
+        response = self.client.get(reverse("decks:public_decks"))
+
+        self.assertNotContains(response, 'id="deck-library-search"')
+
+    def test_private_published_does_not_enable_search(self):
+        self.create_deck("Private", editorial_status="PUBLISHED")
+
+        response = self.client.get(reverse("decks:public_decks"))
+
+        self.assertNotContains(response, 'id="deck-library-search"')
+
+    def test_archived_public_does_not_enable_search(self):
+        self.create_public_deck("Archived", status="ARCHIVED")
+
+        response = self.client.get(reverse("decks:public_decks"))
+
+        self.assertNotContains(response, 'id="deck-library-search"')
+        self.assertContains(response, "Archivo histórico")
+
+    def test_published_public_enables_search_and_no_results_keeps_one_clear_action(self):
+        deck = self.create_public_deck("Searchable")
+
+        response = self.client.get(reverse("decks:public_decks"), {"q": "missing"})
+
+        self.assertContains(response, 'id="deck-library-search"')
+        self.assertContains(response, 'for="deck-search"')
+        self.assertContains(response, "BÚSQUEDA SIN RESULTADOS")
+        self.assertContains(response, "Limpiar búsqueda", count=1)
+        self.assertNotContains(response, deck.name)

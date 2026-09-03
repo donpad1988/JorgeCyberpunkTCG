@@ -59,7 +59,9 @@ def public_decks(request):
         "has_active_video": Exists(active_videos),
     }
     base_query = Deck.objects.select_related("owner", "editorial_profile").annotate(**annotations)
-    decks = base_query.public_current()
+    published_decks = base_query.public_current()
+    has_published_decks = published_decks.exists()
+    decks = published_decks
     if query:
         decks = decks.filter(
             models.Q(name__icontains=query)
@@ -72,7 +74,13 @@ def public_decks(request):
     return render(
         request,
         "decks/public_deck_list.html",
-        {"decks": page_obj, "page_obj": page_obj, "archived_decks": archived_decks, "q": query},
+        {
+            "decks": page_obj,
+            "page_obj": page_obj,
+            "archived_decks": archived_decks,
+            "has_published_decks": has_published_decks,
+            "q": query,
+        },
     )
 
 
