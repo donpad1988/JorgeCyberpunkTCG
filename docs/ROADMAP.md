@@ -137,6 +137,14 @@ Las fases funcionales originales **Fase 8 (Herramientas)**, **Fase 9 (Comunidad)
   - Integrity check exitoso (`VERIFICATION SUCCESSFUL: ok`) y simulación controlada de recuperación efectuada en `/tmp/` sin alterar la base de datos activa ni sus permisos.
   - Servido como prerrequisito pre-deploy seguro para el despliegue exitoso del bloque P0.2 en producción.
 
+* **P0.4 — Production Security Hardening**: `IMPLEMENTACIÓN LOCAL COMPLETADA / VALIDACIÓN PRODUCCIÓN PENDIENTE`
+  - Auditoría de seguridad realizada confirmando que `security.W004` (HSTS desactivado) era el único warning inicial de `check --deploy`.
+  - Activación inicial y conservadora de HSTS configurada en `config/settings/production.py` con `SECURE_HSTS_SECONDS = 3600` (max-age 1 hora).
+  - Mantención explícita de `SECURE_HSTS_INCLUDE_SUBDOMAINS = False` y `SECURE_HSTS_PRELOAD = False`.
+  - Diferimiento de `SECURE_PROXY_SSL_HEADER` y `SECURE_REFERRER_POLICY` para validaciones independientes de infraestructura.
+  - Batería de 9 tests de regresión de seguridad de producción añadida en `apps/core/tests/test_production_security.py` (total de 158 tests pasando).
+  - Manual operacional y estrategia de incremento gradual documentados en `docs/P0_4_PRODUCTION_SECURITY_HARDENING.md`.
+
 ---
 
 ## Cuadro de Resumen del Roadmap Maestro
