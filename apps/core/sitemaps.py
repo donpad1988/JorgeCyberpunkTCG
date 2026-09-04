@@ -16,7 +16,10 @@ class StaticViewSitemap(Sitemap):
             "videos:list",
             "cards:catalog",
             "decks:public_decks",
+            "core:privacy",
+            "core:terms",
         ]
+
 
     def location(self, item):
         return reverse(item)

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Términos de Uso | Jorge CyberpunkTCG{% endblock %}
+{% block meta_description %}Términos de Uso de JorgeCyberpunkTCG. Condiciones de uso, normas comunitarias y exención de responsabilidad e independencia de la plataforma.{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'core:terms' %}">{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container legal-doc">
+    <p class="eyebrow">LEGAL PROTOCOL // TÉRMINOS</p>
+    <h1>TÉRMINOS DE USO</h1>
+    <p class="section-intro">Condiciones generales de uso, normas de conducta de la comunidad y exención de responsabilidad.</p>
+
+    <h2>1. Naturaleza de la Plataforma</h2>
+    <p><strong>JorgeCyberpunkTCG</strong> es un sitio web independiente dedicado a la divulgación editorial, análisis estratégico, guías tácticas y consulta de contenidos sobre Cyberpunk TCG para la comunidad de habla hispana.</p>
+
+    <h2>2. Exención de Responsabilidad e Independencia de Marca</h2>
+    <p><strong>JorgeCyberpunkTCG es un proyecto independiente de comunidad y contenido táctico. No está afiliado oficialmente con CD PROJEKT RED ni WeirdCo.</strong></p>
+    <p>Todas las marcas registradas, nombres comerciales, elementos del juego y referencias citadas en este sitio pertenecen a sus respectivos titulares y se utilizan en este sitio web exclusivamente con fines informativos, analíticos, educativos y de divulgación comunitaria.</p>
+
+    <h2>3. Cuentas de Usuario y Seguridad</h2>
+    <p>Para acceder a la creación de mazos y funciones personalizadas, el usuario debe registrarse creando una identidad (cuenta). El usuario es responsable de mantener la confidencialidad de sus credenciales de acceso y de toda la actividad que ocurra bajo su cuenta.</p>
+
+    <h2>4. Contenido Generado por el Usuario</h2>
+    <p>Al crear o publicar mazos tácticos, descripciones, notas editoriales o análisis en la plataforma, el usuario garantiza que el contenido introducido respeta la ley y las normas de convivencia. El usuario conserva la propiedad de sus composiciones, otorgando a JorgeCyberpunkTCG la facultad técnica de mostrarlas en la biblioteca pública conforme a las opciones de visibilidad seleccionadas.</p>
+
+    <h2>5. Normas de Conducta Comunal</h2>
+    <p>En el uso de la plataforma queda estrictamente prohibido:</p>
+    <ul>
+      <li>Publicar contenido ofensivo, difamatorio, de odio, acoso o ilegal.</li>
+      <li>Realizar envíos masivos no solicitados (spam) o publicidad no autorizada.</li>
+      <li>Intentar vulnerar, alterar o comprometer la seguridad, estabilidad o servidores de la plataforma.</li>
+      <li>Suplantar la identidad de otros usuarios, administradores o entidades oficiales.</li>
+    </ul>
+
+    <h2>6. Moderación y Gestión del Servicio</h2>
+    <p>El administrador de JorgeCyberpunkTCG se reserva la facultad de moderar, restringir, despublicar contenido o suspender cuentas de usuario que incumplan los presentes Términos de Uso o que pongan en riesgo la seguridad y correcto funcionamiento del servicio.</p>
+
+    <h2>7. Carácter Informativo de los Contenidos del Juego</h2>
+    <p>Los análisis, estadísticas, reglas explicadas y guías publicadas son de carácter puramente orientativo y editorial. Ante cualquier discrepancia en reglas, texto o mecánicas de cartas, prevalecen siempre los manuales y fuentes oficiales del juego Cyberpunk TCG.</p>
+
+    <h2>8. Disponibilidad del Servicio</h2>
+    <p>JorgeCyberpunkTCG realiza esfuerzos razonables por mantener la plataforma disponible y operativa, pero no garantiza la disponibilidad ininterrumpida ni la ausencia absoluta de fallos técnicos en el servicio.</p>
+
+    <h2>9. Modificaciones a los Términos</h2>
+    <p>Los presentes Términos de Uso podrán ser actualizados periódicamente para reflejar mejoras en la plataforma o cambios en el servicio. El uso continuado del sitio tras la publicación de cambios constituye la aceptación de los nuevos términos.</p>
+
+    <h2>10. Contacto</h2>
+    <p>Para cualquier inquietud relacionada con estos términos, puedes comunicarte con el administrador al correo oficial:</p>
+    <p><code>jorgecyberpunktcg@gmail.com</code></p>
+    <p class="muted"><em>Última actualización: Septiembre de 2026</em></p>
+  </div>
+</section>
+{% endblock %}

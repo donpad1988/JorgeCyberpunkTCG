@@ -123,8 +123,12 @@ Las fases funcionales originales **Fase 8 (Herramientas)**, **Fase 9 (Comunidad)
   - Flujo real de Password Reset de Django validado end-to-end en producción recibiendo correo con URL HTTPS canónica.
   - Incidencia de orden en la capa WSGI operacional de PythonAnywhere corregida (variables de entorno `EMAIL_*` declaradas antes de `get_wsgi_application()`).
   - Configuración sensible y secretos (App Password, `DJANGO_SECRET_KEY`) preservados estrictamente fuera del repositorio Git.
-* **P0.2 — Privacy & Independent-Site Disclosure**: `AUDITORÍA / DISEÑO COMPLETADOS (Siguiente bloque de trabajo)`
-  - Inventario de datos, flujo de registro, cookies y exención de marca auditados. Estructura de Política de Privacidad y Términos lista para implementación.
+* **P0.2 — Privacy & Independent-Site Disclosure**: `COMPLETADA`
+  - Páginas públicas de Política de Privacidad (`/privacidad/`) y Términos de Uso (`/terminos/`) implementadas e indexables.
+  - Disclaimer factual de independencia respecto a CD PROJEKT RED y WeirdCo reforzado en el footer y en páginas legales.
+  - Leyenda informativa de transparencia pre-registro añadida en `register.html` con hipervínculos hacia privacidad y términos.
+  - Coherencia visual *Neural Interface*, 136 tests pasando, sin modelos nuevos ni migraciones.
+
 * **P0.3 — SQLite Backup & Recovery**: `PENDIENTE`
   - Estrategia de respaldo periódico automatizado de `db.sqlite3` en PythonAnywhere previa a despliegues pendiente de implementación.
 

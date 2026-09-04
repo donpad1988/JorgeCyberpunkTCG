@@ -32,3 +32,13 @@ def health_check(request):
     response = JsonResponse({"status": "healthy"})
     response["X-Robots-Tag"] = "noindex, nofollow"
     return response
+
+
+def privacy_policy(request):
+    """Render the public Privacy Policy page."""
+    return render(request, "core/privacy.html")
+
+
+def terms_of_service(request):
+    """Render the public Terms of Service page."""
+    return render(request, "core/terms.html")

@@ -112,6 +112,9 @@ class SeoDiscoveryTests(TestCase):
         self.assertIn(reverse("videos:list"), content)
         self.assertIn(reverse("cards:catalog"), content)
         self.assertIn(reverse("decks:public_decks"), content)
+        self.assertIn(reverse("core:privacy"), content)
+        self.assertIn(reverse("core:terms"), content)
+
 
         # Public entities
         self.assertIn(self.published_article.get_absolute_url(), content)

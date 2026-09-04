@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Política de Privacidad | Jorge CyberpunkTCG{% endblock %}
+{% block meta_description %}Política de Privacidad de JorgeCyberpunkTCG. Información transparente sobre el tratamiento de datos personales, cuentas y cookies técnicas.{% endblock %}
+{% block canonical %}<link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% url 'core:privacy' %}">{% endblock %}
+{% block content %}
+<section class="section">
+  <div class="container legal-doc">
+    <p class="eyebrow">LEGAL PROTOCOL // PRIVACIDAD</p>
+    <h1>POLÍTICA DE PRIVACIDAD</h1>
+    <p class="section-intro">Transparencia sobre los datos recopilados, su finalidad y su tratamiento en la plataforma.</p>
+
+    <h2>1. Identidad de la Plataforma</h2>
+    <p><strong>JorgeCyberpunkTCG</strong> es un sitio web e interfaz táctica independiente desarrollada por y para la comunidad hispanohablante de Cyberpunk TCG. El objetivo de la plataforma es ofrecer recursos informativos, análisis de estrategias, consulta de catálogo y gestión de mazos personales.</p>
+
+    <h2>2. Contacto Directo</h2>
+    <p>Para cualquier consulta, actualización o solicitud relacionada con la privacidad y el tratamiento de datos personales en este sitio web, puedes comunicarte directamente al correo electrónico oficial:</p>
+    <p><code>jorgecyberpunktcg@gmail.com</code></p>
+
+    <h2>3. Información Recopilada</h2>
+    <p>JorgeCyberpunkTCG recopila únicamente la información necesaria para permitir el registro, autenticación y funcionamiento de las herramientas interactivas:</p>
+    <ul>
+      <li><strong>Datos de Cuenta (Obligatorios):</strong> Nombre de usuario (<code>username</code>), correo electrónico (<code>email</code>) y contraseña.</li>
+      <li><strong>Datos de Perfil (Opcionales):</strong> Nombre (<code>first_name</code>) y apellido (<code>last_name</code>), configurables libremente desde el perfil de usuario.</li>
+      <li><strong>Tratamiento de Contraseñas:</strong> Las contraseñas no se almacenan en texto plano. Django almacena una representación criptográfica (hash) destinada exclusivamente a la autenticación segura.</li>
+      <li><strong>Contenido Creado por el Usuario:</strong> Estructura, nombres, descripciones, estrategias y composiciones de mazos creados mediante el sistema de mazos tácticos.</li>
+    </ul>
+
+    <h2>4. Finalidades del Tratamiento</h2>
+    <p>Los datos suministrados se utilizan exclusivamente para:</p>
+    <ul>
+      <li>Crear, mantener y gestionar la cuenta del usuario en la plataforma.</li>
+      <li>Autenticar el acceso y permitir el restablecimiento de contraseña en caso de olvido.</li>
+      <li>Almacenamiento y gestión de mazos tácticos personales.</li>
+      <li>Publicar y atribuir autoría sobre los mazos que el usuario decida marcar explícitamente como públicos.</li>
+      <li>Garantizar la estabilidad, seguridad e integridad del servicio web.</li>
+    </ul>
+
+    <h2>5. Visibilidad Pública y Privacidad</h2>
+    <ul>
+      <li><strong>Datos Privados:</strong> Tu correo electrónico, nombre, apellido, contraseñas y mazos marcados como privados son estrictamente confidenciales y no se muestran a otros visitantes.</li>
+      <li><strong>Datos Públicos:</strong> Si decide publicar un mazo táctico (<code>is_public=True</code>), su nombre de usuario (<code>@username</code>) aparecerá como propietario del mazo en la biblioteca pública (<em>Tactical Deck Library</em>) y en la vista de detalle (<em>Tactical Deck File</em>).</li>
+    </ul>
+
+    <h2>6. Comunicaciones por Correo Electrónico</h2>
+    <p>El servicio de correo electrónico se utiliza de manera exclusiva para mensajes transaccionales del sistema, tales como las instrucciones de restablecimiento de contraseña. JorgeCyberpunkTCG no envía correo comercial, boletines (newsletters) ni publicidad no solicitada.</p>
+
+    <h2>7. Cookies y Sesiones Técnicas</h2>
+    <p>El sitio web utiliza únicamente cookies técnicas estrictamente necesarias para el funcionamiento del servicio:</p>
+    <ul>
+      <li><code>sessionid</code>: Mantiene la sesión autenticada del usuario en el navegador.</li>
+      <li><code>csrftoken</code>: Protege los formularios web contra ataques de falsificación de peticiones en sitios cruzados (CSRF).</li>
+    </ul>
+    <p>No se utilizan cookies de rastreo comercial, analítica publicitaria ni redes de anuncios de terceros.</p>
+
+    <h2>8. Contenido Audiovisual Embebido (YouTube)</h2>
+    <p>El sitio puede incluir reproductores de video de YouTube para complementar las guías tácticas. Para proteger la privacidad de los visitantes, los reproductores utilizan el dominio de privacidad mejorada <code>youtube-nocookie.com</code>. Al interactuar o reproducir estos contenidos externos, aplican los términos y políticas del proveedor correspondiente (Google / YouTube).</p>
+
+    <h2>9. Servicios de Infraestructura Externa</h2>
+    <p>Para la prestación del servicio técnico se emplean los siguientes proveedores de infraestructura:</p>
+    <ul>
+      <li><strong>PythonAnywhere:</strong> Hosting y servidor de aplicaciones web.</li>
+      <li><strong>Gmail SMTP (Google LLC):** Envío seguro de correos transaccionales de restablecimiento de contraseña.</li>
+      <li><strong>YouTube (Google LLC):** Transmisión de videos informativos embebidos.</li>
+    </ul>
+
+    <h2>10. Seguridad de la Información</h2>
+    <p>La plataforma aplica medidas de seguridad razonables, como el uso de conexiones cifradas HTTPS en producción y la gestión segura de claves. No obstante, ningún sistema de transmisión en Internet es 100% invulnerable, por lo que se recomienda al usuario mantener contraseñas seguras y no compartirlas.</p>
+
+    <h2>11. Actualización y Eliminación de Datos</h2>
+    <p>El usuario puede modificar su información de perfil en cualquier momento desde <code>/cuenta/perfil/editar/</code>. Para solicitar la eliminación definitiva de su cuenta de usuario y los datos o mazos asociados, puede enviar una solicitud por correo electrónico a <code>jorgecyberpunktcg@gmail.com</code>.</p>
+
+    <h2>12. Modificaciones a esta Política</h2>
+    <p>JorgeCyberpunkTCG podrá actualizar esta Política de Privacidad conforme evolucione la plataforma o sus herramientas. Las modificaciones se publicarán en esta misma página.</p>
+    <p class="muted"><em>Última actualización: Septiembre de 2026</em></p>
+  </div>
+</section>
+{% endblock %}
