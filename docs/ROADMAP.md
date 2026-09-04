@@ -129,8 +129,11 @@ Las fases funcionales originales **Fase 8 (Herramientas)**, **Fase 9 (Comunidad)
   - Leyenda informativa de transparencia pre-registro añadida en `register.html` con hipervínculos hacia privacidad y términos.
   - Coherencia visual *Neural Interface*, 136 tests pasando, sin modelos nuevos ni migraciones.
 
-* **P0.3 — SQLite Backup & Recovery**: `PENDIENTE`
-  - Estrategia de respaldo periódico automatizado de `db.sqlite3` en PythonAnywhere previa a despliegues pendiente de implementación.
+* **P0.3 — SQLite Backup & Recovery**: `IMPLEMENTACIÓN LOCAL COMPLETADA / VALIDACIÓN PRODUCCIÓN PENDIENTE`
+  - Script standalone `scripts/backup_sqlite.py` creado con soporte nativo para `sqlite3.Connection.backup()`, verificación de integridad con `PRAGMA integrity_check;`, rotación de 10 copias rutinarias y exención de respaldos etiquetados.
+  - Test suite completa de 13 pruebas unitarias e integración con simulación de disaster recovery creada y superada.
+  - Manual operacional `docs/P0_3_SQLITE_BACKUP_RECOVERY.md` elaborado.
+  - Pendiente ejecución del primer backup real y validación final durante el despliegue de P0.2 en PythonAnywhere.
 
 ---
 
