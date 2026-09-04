@@ -2,7 +2,7 @@
 
 **Proyecto:** JorgeCyberpunkTCG
 **Entorno:** PythonAnywhere (`https://jorgecyberpunktcg.pythonanywhere.com/`)
-**Estado:** IMPLEMENTACIÓN LOCAL COMPLETADA / VALIDACIÓN PRODUCCIÓN PENDIENTE
+**Estado:** COMPLETADO — VALIDADO EN PRODUCCIÓN (2026-09-04)
 
 ---
 
@@ -61,7 +61,7 @@ Una vez validada la Etapa 1 en producción durante el periodo prelaunch, la dura
 
 | Etapa | Estado | Duración (`max-age`) | Objetivo / Condición de paso |
 | :--- | :--- | :--- | :--- |
-| **Etapa 1 (P0.4B)** | **Actual** | **3,600 segundos (1 hora)** | Validación inicial de envío de la cabecera en PythonAnywhere. |
+| **Etapa 1 (P0.4B)** | **Completado (2026-09-04)** | **3,600 segundos (1 hora)** | Validación inicial de envío de la cabecera en PythonAnywhere. |
 | **Etapa 2 (Estabilización)** | Pendiente | 2,592,000 segundos (30 días) | Operación continua sin incidencias durante el pre-lanzamiento. |
 | **Etapa 3 (Estado Estable)** | Pendiente | 31,536,000 segundos (1 año / 365 días) | Lanzamiento oficial (Octubre 2026). |
 
@@ -85,7 +85,7 @@ En caso de requerirse la suspensión inmediata de la política HSTS en producci�
 
 ## 6. PROCEDIMIENTO DE VALIDACIÓN EN PYTHONANYWHERE (DESPLIEGUE P0.4B)
 
-Cuando se autorice el despliegue en producción:
+Procedimiento ejecutado durante el despliegue en producción:
 
 1.  Acceder a la consola Bash de PythonAnywhere.
 2.  Navegar a la carpeta del proyecto y verificar status limpio.
@@ -96,10 +96,40 @@ Cuando se autorice el despliegue en producción:
 4.  Descargar los cambios: `git pull origin main`.
 5.  Recopilar estáticos: `python manage.py collectstatic --noinput --settings=config.settings.production`.
 6.  Reload de la aplicación: `touch /var/www/jorgecyberpunktcg_pythonanywhere_com_wsgi.py`.
-7.  Verificar en la respuesta HTTP la presencia del encabezado:
-    ```bash
-    curl -I https://jorgecyberpunktcg.pythonanywhere.com/
+7.  Verificar en la respuesta HTTP la presencia del encabezado HSTS.
+
+---
+
+## 7. REGISTRO DE VALIDACIÓN Y EVIDENCIA DE PRODUCCIÓN (2026-09-04)
+
+*   **Fecha de Validación:** 2026-09-04
+*   **Entorno:** PythonAnywhere (`https://jorgecyberpunktcg.pythonanywhere.com/`)
+*   **Commit Desplegado:** `4ba4f47 Implementar HSTS progresivo inicial`
+*   **Validación HTTPS (`curl -I https://jorgecyberpunktcg.pythonanywhere.com/`):**
+    ```text
+    HTTP/1.1 200 OK
+    Strict-Transport-Security: max-age=3600
+    X-Frame-Options: DENY
+    X-Content-Type-Options: nosniff
+    Referrer-Policy: same-origin
+    Cross-Origin-Opener-Policy: same-origin
     ```
-    *Respuesta esperada:* `Strict-Transport-Security: max-age=3600`
-8.  Inspeccionar la salida de las últimas 50 líneas del log de errores:
-    `tail -n 50 /var/log/jorgecyberpunktcg.pythonanywhere.com.error.log`.
+*   **Validación Redirección HTTP (`curl -I http://jorgecyberpunktcg.pythonanywhere.com/`):**
+    ```text
+    HTTP/1.1 301 Moved Permanently
+    Location: https://jorgecyberpunktcg.pythonanywhere.com/
+    ```
+*   **Inspección de Log (`tail -n 50 /var/log/jorgecyberpunktcg.pythonanywhere.com.error.log`):**
+    *   La inspección de las últimas 50 líneas no mostró errores.
+*   **Conclusiones Operacionales:**
+    *   HSTS Etapa 1 está activo en producción (`max-age = 3600` segundos / 1 hora).
+    *   `SECURE_HSTS_INCLUDE_SUBDOMAINS` permanece `False` intencionalmente.
+    *   `SECURE_HSTS_PRELOAD` permanece `False` intencionalmente.
+    *   `security.W004` quedó resuelto.
+    *   `security.W005` y `security.W021` se mantienen como warnings intencionales de diseño para el subdominio compartido de PythonAnywhere.
+    *   HTTP continúa redirigiendo correctamente a HTTPS (HTTP 301).
+    *   Cero errores tras el Reload de la aplicación.
+    *   Cero cambios en la base de datos y cero migraciones generadas.
+    *   No fue necesario modificar `SECURE_PROXY_SSL_HEADER`.
+    *   La respuesta HTTP real de producción ya incluye `Referrer-Policy: same-origin`; no se introdujeron cambios adicionales en P0.4 para esta cabecera.
+    *   **Criterio de Progresión:** La siguiente elevación de HSTS a 30 días (`max-age=2592000`) NO debe ejecutarse todavía y esperará a completar un periodo estable de observación pre-lanzamiento.
