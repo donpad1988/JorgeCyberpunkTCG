@@ -116,6 +116,18 @@ Las fases funcionales originales **Fase 8 (Herramientas)**, **Fase 9 (Comunidad)
 - **Arquitectura de Producción**: PythonAnywhere WSGI + SQLite limpia + servido estático nativo de PythonAnywhere.
 - **Carácter del Despliegue**: Despliegue técnico inicial pre-lanzamiento. El entorno de producción servirá como plataforma de pruebas controladas e integración continua hacia el lanzamiento oficial en **octubre de 2026**.
 
+### Hitos Transversales de Auditoría Prelaunch (Asociados a Fases 13–14)
+
+* **P0.1 — Email & Account Recovery**: `COMPLETADA`
+  - Gmail SMTP operativo en producción (`smtp.gmail.com:587` TLS).
+  - Flujo real de Password Reset de Django validado end-to-end en producción recibiendo correo con URL HTTPS canónica.
+  - Incidencia de orden en la capa WSGI operacional de PythonAnywhere corregida (variables de entorno `EMAIL_*` declaradas antes de `get_wsgi_application()`).
+  - Configuración sensible y secretos (App Password, `DJANGO_SECRET_KEY`) preservados estrictamente fuera del repositorio Git.
+* **P0.2 — Privacy & Independent-Site Disclosure**: `AUDITORÍA / DISEÑO COMPLETADOS (Siguiente bloque de trabajo)`
+  - Inventario de datos, flujo de registro, cookies y exención de marca auditados. Estructura de Política de Privacidad y Términos lista para implementación.
+* **P0.3 — SQLite Backup & Recovery**: `PENDIENTE`
+  - Estrategia de respaldo periódico automatizado de `db.sqlite3` en PythonAnywhere previa a despliegues pendiente de implementación.
+
 ---
 
 ## Cuadro de Resumen del Roadmap Maestro
