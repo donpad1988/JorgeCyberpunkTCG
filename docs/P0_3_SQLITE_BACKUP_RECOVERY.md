@@ -3,7 +3,7 @@
 **Proyecto:** JorgeCyberpunkTCG  
 **Entorno de Producción:** PythonAnywhere (`jorgecyberpunktcg`)  
 **Base de datos:** SQLite (`db.sqlite3`)  
-**Estado:** IMPLEMENTACIÓN LOCAL COMPLETADA / VALIDACIÓN PRODUCCIÓN PENDIENTE  
+**Estado:** COMPLETADO — VALIDADO EN PRODUCCIÓN (2026-09-04)
 
 ---
 
@@ -199,11 +199,40 @@ Procedimiento que se ejecutará en PythonAnywhere para aplicar el cambio P0.2 (P
 
 ## 12. CRITERIO DE ACEPTACIÓN
 
-P0.3B se considera completado localmente al cumplir:
+P0.3 se considera totalmente completado y validado al cumplir:
 *   [x] Script `scripts/backup_sqlite.py` creado con `sqlite3.Connection.backup()`.
 *   [x] Soporte para `--source`, `--destination-dir`, `--label`, `--keep`, `--verify`.
 *   [x] Verificación automática con `PRAGMA integrity_check;`.
 *   [x] Rotación limpia conservando 10 rutinarios y preservando backups etiquetados.
 *   [x] Tests unitarios en `apps/core/tests/test_backup_sqlite.py` pasando con éxito (13 tests OK, incluyendo simulación de recuperación).
 *   [x] `.gitignore` actualizado con `db_backup_*.sqlite3` y `backups/`.
-*   [x] Documentación operacional elaborada.
+*   [x] Documentación operacional elaborada y actualizada.
+*   [x] Primer backup real ejecutado y verificado con éxito en producción PythonAnywhere.
+*   [x] Simulación controlada de recuperación efectuada en producción sin alterar la base activa.
+
+---
+
+## 13. REGISTRO DE VALIDACIÓN EN PRODUCCIÓN (2026-09-04)
+
+*   **Fecha de Validación:** 2026-09-04
+*   **Entorno:** PythonAnywhere (`https://jorgecyberpunktcg.pythonanywhere.com/`)
+*   **Commit de Producción:** `e622e2c Implementar respaldo seguro de SQLite`
+*   **Directorio Externo Creado:** `/home/jorgecyberpunktcg/backups/JorgeCyberpunkTCG` (Permisos `0700` `rwx------`, usuario `jorgecyberpunktcg:registered_users`).
+*   **Primer Backup Real Creado:** `db_backup_pre_P0_2_20260904_203706.sqlite3`
+    *   **Tamaño:** 315,392 bytes
+    *   **Permisos:** `0600` (`rw-------`)
+    *   **Método:** `scripts/backup_sqlite.py` con `sqlite3.Connection.backup()`.
+    *   **Resultado Integrity Check:** `VERIFICATION SUCCESSFUL: ok`
+*   **Simulación Controlada de Recuperación:**
+    1.  El backup fue copiado a la ruta temporal `/tmp/jorgecyberpunktcg_recovery_test.sqlite3`.
+    2.  Se ejecutó verificación explícita: `python scripts/backup_sqlite.py --verify /tmp/jorgecyberpunktcg_recovery_test.sqlite3`.
+    3.  **Resultado:** `VERIFICATION SUCCESSFUL: ok`.
+    4.  **Resultado de la validación de seguridad:** La base activa `/home/jorgecyberpunktcg/JorgeCyberpunkTCG/db.sqlite3` **NO fue sustituida, modificada ni alterada** durante la simulación.
+    5.  La copia temporal `/tmp/jorgecyberpunktcg_recovery_test.sqlite3` fue eliminada tras concluir el test.
+*   **Despliegue Posterior de P0.2 en Producción:**
+    *   `git pull origin main` desplegado limpiamente.
+    *   Páginas activas y verificadas: `/privacidad/` y `/terminos/` (Rutas Reales).
+    *   `sitemap.xml` y `/health/` respondiendo 200 OK.
+    *   `collectstatic` ejecutado correctamente.
+    *   La inspección de las últimas 50 líneas del log de errores de PythonAnywhere no mostró errores.
+*   **Controles verificados:** Se ratifica que ningún archivo de backup ni secreto operacional forma parte del repositorio Git.
