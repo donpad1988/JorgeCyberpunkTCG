@@ -141,15 +141,20 @@ Las fases funcionales originales **Fase 8 (Herramientas)**, **Fase 9 (Comunidad)
   - Auditoría de seguridad realizada confirmando que `security.W004` (HSTS desactivado) era el único warning inicial de `check --deploy`.
   - Formulación del plan de endurecimiento progresivo de HSTS, proxy SSL y política de referente.
 
-* **P0.4B — Production Security Hardening Implementation**: `COMPLETADA (Local) — PREPARADO PARA DESPLIEGUE CONTROLADO`
-  - Activación conservadora de HSTS configurada en `config/settings/production.py` con `SECURE_HSTS_SECONDS = 3600` (max-age 1 hora, configurable vía entorno `DJANGO_SECURE_HSTS_SECONDS`).
+* **P0.4B — Production Security Hardening Implementation**: `COMPLETADA — VALIDADA EN PRODUCCIÓN`
+  - Activación conservadora de HSTS configurada en `config/settings/production.py` con `SECURE_HSTS_SECONDS = 3600` (max-age 1 hora, configurable vía entorno `DJANGO_SECURE_HSTS_SECONDS`). Confirmado en vivo en producción en PythonAnywhere (`Strict-Transport-Security: max-age=3600`).
   - Mantención explícita de `SECURE_HSTS_INCLUDE_SUBDOMAINS = False` y `SECURE_HSTS_PRELOAD = False`.
-  - Configuración del encabezado de proxy SSL (`SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")`).
-  - Definición de Referrer Policy (`SECURE_REFERRER_POLICY = "same-origin"`).
-  - Aislamiento completo de desarrollo local (`http://127.0.0.1:8000/`) manteniéndolo libre de redirección SSL u HSTS.
-  - Batería de tests de regresión de seguridad ampliada a 161 tests en `apps/core/tests/test_production_security.py`.
-  - Manual operacional y evidencia de validación documentados en `docs/P0_4_PRODUCTION_SECURITY_HARDENING.md`.
-  - Siguiente macro-objetivo prelaunch previsto: **P1 — Prelaunch Readiness** (tras validación del despliegue en PythonAnywhere).
+  - Configuración del encabezado de proxy SSL (`SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")`) desplegada y operando sin bucles de redirección.
+  - Definición de Referrer Policy (`SECURE_REFERRER_POLICY = "same-origin"`) confirmada en vivo en cabeceras HTTP de producción.
+  - Aislamiento completo de desarrollo local (`http://127.0.0.1:8000/`) libre de redirección SSL u HSTS.
+  - Despliegue validado exitosamente en PythonAnywhere tras ejecución del respaldo predeploy de SQLite, `collectstatic` y reload de la aplicación.
+  - Corrección de regresión visual histórica en `static/css/components.css` originada en P0.2 (commit `abe5943`) mediante restauración directa desde Git (commit `da9b094 Restore truncated global component styles`), desplegada y comprobada en vivo.
+  - Batería de 163 tests pasando.
+
+* **P1.0 — Prelaunch Readiness Audit**: `COMPLETADA`
+  - Auditoría técnica integral de preparación prelaunch efectuada (evaluación de inventario público/autenticado, user journeys, content readiness, UX/UI, accesibilidad, SEO, seguridad funcional, estados vacíos, datos y base de datos).
+  - Decisión obtenida: `GO CON CONDICIONES` (Pre-lanzamiento técnico sólido; backlog priorizado en `docs/P1_0_PRELAUNCH_READINESS_AUDIT.md`).
+
 
 
 ---
