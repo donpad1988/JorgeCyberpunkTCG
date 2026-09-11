@@ -155,6 +155,13 @@ Las fases funcionales originales **Fase 8 (Herramientas)**, **Fase 9 (Comunidad)
   - Auditoría técnica integral de preparación prelaunch efectuada (evaluación de inventario público/autenticado, user journeys, content readiness, UX/UI, accesibilidad, SEO, seguridad funcional, estados vacíos, datos y base de datos).
   - Decisión obtenida: `GO CON CONDICIONES` (Pre-lanzamiento técnico sólido; backlog priorizado en `docs/P1_0_PRELAUNCH_READINESS_AUDIT.md`).
 
+* **P1.1 — Responsive Footer Hardening**: `COMPLETADA LOCALMENTE — PENDIENTE DE DESPLIEGUE`
+  - Resolución del hallazgo P1 de P1.0 relativo al comportamiento del footer en viewports ultra-estrechos (<360px).
+  - Inclusión de regla media query `@media(max-width:360px)` en `static/css/components.css` optimizando paddings, gaps y fuentes monospace del footer.
+  - Verificación responsive superada en matriz completa de viewports (320px, 360px, 375px, 390px, 768px, 1024px, 1440px) sin overflow horizontal.
+  - 163 tests pasando en verde. Pendiente de revisión y despliegue controlado.
+
+
 
 
 ---
