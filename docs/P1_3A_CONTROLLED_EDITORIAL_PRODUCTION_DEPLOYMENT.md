@@ -1,5 +1,8 @@
 # P1.3A — Controlled Editorial Production Deployment
 
+## Estado
+COMPLETADA Y VALIDADA EN PRODUCCIÓN
+
 ## Objetivo
 Desplegar exclusivamente el contenido editorial aprobado de la fase P1.3A (2 categorías, 3 artículos) a la base de datos de producción en PythonAnywhere de forma determinista, idempotente y segura, sin copiar ni sobrescribir la base de datos local.
 
@@ -18,11 +21,11 @@ La fuente de datos para `title`, `summary`, `body`, `article_type`, `category_sl
   - Si una categoría o artículo no existe: `CREATE`.
   - Si existe y coincide exactamente en todos sus campos clave: `EXISTS` (no se modifica nada).
   - Si existe pero difiere en algún campo: `CONFLICT` (aborta inmediatamente sin alterar registros).
-- **Autor**: Resuelto de forma estable mediante `User.objects.get(username="jorgecyberpunktcg")`. Si el usuario no existe en la base destino, la ejecución aborta.
-- **Soporte Dry-Run**: `--dry-run` ejecuta toda la validación dentro de una transacción con rollback forzado, retornando los estados que se aplicarían sin alterar la base de datos.
+- **Autor**: Resuelto de forma estable mediante `User.objects.get(username="jorgecyberpunktcg")`.
+- **Soporte Dry-Run**: Flag `--dry-run` para pre-validación sin persistencia de datos.
 
 ## Pruebas Automáticas del Cargador
-Implementadas en `apps/content/tests/test_load_p1_3a_command.py` (12/12 tests passing):
+Implementadas en `apps/content/tests/test_load_p1_3a_command.py` (12/12 tests passing, total suite 171 tests OK):
 1. Creación en base limpia (2 categorías, 3 artículos).
 2. Idempotencia en segunda ejecución (salida `EXISTS`).
 3. Verificación del flag `--dry-run` (0 cambios persistidos).
@@ -32,14 +35,30 @@ Implementadas en `apps/content/tests/test_load_p1_3a_command.py` (12/12 tests pa
 7. No alteración de registros no relacionados.
 8. Visibilidad pública inmediata vía `Article.objects.publicly_visible()`.
 
-## Procedimiento de Despliegue en Producción
-1. **Push del cargador**: `git push origin main` con el comando y sus tests.
-2. **Pre-check en PythonAnywhere**: Verificar repositorio limpio en `/home/jorgecyberpunktcg/JorgeCyberpunkTCG`.
-3. **Backup en producción**: Ejecutar `python scripts/backup_sqlite.py` antes de cualquier escritura.
-4. **Git pull**: Actualizar repositorio en producción (`git pull origin main`).
-5. **Check**: Ejecutar `python manage.py check` y `python manage.py makemigrations --check`.
-6. **Dry-Run en producción**: Ejecutar `python manage.py load_p1_3a_editorial_content --dry-run`.
-7. **Carga real**: Ejecutar `python manage.py load_p1_3a_editorial_content`.
-8. **Segunda Dry-Run de verificación**: Confirmar idempotencia (5 `EXISTS`).
-9. **Validación HTTP**: Verificar respuesta HTTP 200 en las 5 URLs públicas.
-10. **Seguridad e HSTS**: Confirmar que HSTS permanece en 3600 segundos (`Strict-Transport-Security: max-age=3600`).
+## Procedimiento de Despliegue en PythonAnywhere
+1. **Ruta en producción**: `/home/jorgecyberpunktcg/JorgeCyberpunkTCG`
+2. **Respaldo previo de SQLite en producción**: Executado `python scripts/backup_sqlite.py` (`integrity_check` OK).
+3. **Actualización de código**: `git pull origin main` (Commit `ecec50c Add controlled P1.3A editorial deployment`).
+4. **Verificación Django**: `python manage.py check --settings=config.settings.production` (0 issues).
+5. **Dry-Run en producción**: `python manage.py load_p1_3a_editorial_content --dry-run --settings=config.settings.production` (2 categorías `CREATE`, 3 artículos `CREATE`, 0 conflictos).
+6. **Carga real**: `python manage.py load_p1_3a_editorial_content --settings=config.settings.production` (2 categorías creadas, 3 artículos creados).
+7. **Segunda Dry-Run de verificación**: `python manage.py load_p1_3a_editorial_content --dry-run --settings=config.settings.production` (5 registros `EXISTS`, 0 `CREATE`, 0 `CONFLICT`).
+
+## Conteos en Producción (Antes / Después)
+- **ContentCategory**: 0 $\rightarrow$ 2 (`Plataforma`, `Construcción de Mazos`)
+- **Guías (Article GUIDE)**: 0 $\rightarrow$ 2 (`bienvenido-a-jorgecyberpunktcg`, `como-usar-tu-cyberdeck`)
+- **Estrategias (Article STRATEGY)**: 0 $\rightarrow$ 1 (`antes-de-construir-define-el-proposito-de-tu-mazo`)
+- **Videos**: 0 $\rightarrow$ 0 (Sin cambios)
+- **Cards**: 4 $\rightarrow$ 4 (Sin cambios)
+- **CardPrinting**: 4 $\rightarrow$ 4 (Sin cambios)
+- **Decks**: 1 $\rightarrow$ 1 (Sin cambios)
+- **Users**: 3 $\rightarrow$ 3 (Sin cambios)
+
+## Validación de URLs e Infraestructura
+- `https://jorgecyberpunktcg.pythonanywhere.com/guias/` $\rightarrow$ **HTTP 200 OK**
+- `https://jorgecyberpunktcg.pythonanywhere.com/guias/bienvenido-a-jorgecyberpunktcg/` $\rightarrow$ **HTTP 200 OK**
+- `https://jorgecyberpunktcg.pythonanywhere.com/guias/como-usar-tu-cyberdeck/` $\rightarrow$ **HTTP 200 OK**
+- `https://jorgecyberpunktcg.pythonanywhere.com/estrategias/` $\rightarrow$ **HTTP 200 OK**
+- `https://jorgecyberpunktcg.pythonanywhere.com/estrategias/antes-de-construir-define-el-proposito-de-tu-mazo/` $\rightarrow$ **HTTP 200 OK**
+- **Formato**: Sin Markdown crudo, sin HTML expuesto, texto estructurado en párrafos limpios.
+- **Seguridad**: `Strict-Transport-Security: max-age=3600` verificado en producción.

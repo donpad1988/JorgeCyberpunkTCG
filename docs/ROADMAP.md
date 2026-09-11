@@ -167,12 +167,13 @@ Las fases funcionales originales **Fase 8 (Herramientas)**, **Fase 9 (Comunidad)
   - Inventario cuantitativo obtenido: 0 Guías, 0 Estrategias, 0 Videos, 4 Cartas en Choomdex (1 set), 0 Mazos públicos (1 mazo privado borrador) y 3 Usuarios agregados.
   - Decisión obtenida: `GO CON CONDICIONES` (Infraestructura técnica, UX y seguridad sólidas; requiere publicación de volumen mínimo editorial de 2 guías, 1 estrategia, 1 mazo público y 1 video antes de ampliar pruebas con usuarios externos). Documentado en `docs/P1_2_PRELAUNCH_CONTENT_PRODUCT_READINESS_AUDIT.md`.
 
-* **P1.3A — Editorial Foundation**: `COMPLETADA LOCALMENTE — PENDIENTE DE APROBACIÓN DEL PROPIETARIO`
-  - Publicación local controlada de la fundación editorial mínima prelaunch: exactamente 2 Guías ("Bienvenido a JorgeCyberpunkTCG", "Cómo usar tu Cyberdeck: Choomdex, cartas y mazos") y 1 Estrategia ("Antes de construir: define el propósito de tu mazo").
+* **P1.3A — Editorial Foundation**: `COMPLETADA Y VALIDADA EN PRODUCCIÓN`
+  - Publicación controlada de la fundación editorial mínima prelaunch: exactamente 2 Guías ("Bienvenido a JorgeCyberpunkTCG", "Cómo usar tu Cyberdeck: Choomdex, cartas y mazos") y 1 Estrategia ("Antes de construir: define el propósito de tu mazo").
   - Contenido totalmente original en español, táctico y fundamentado exclusivamente en la documentación e infraestructura técnica interna del repositorio. Cero reglas no verificadas, cero claims de metajuego, winrates o afiliación oficial.
-  - Revisión editorial correctiva aplicada tras inspección visual: eliminación de Markdown crudo mediante formateo a texto plano natural, corrección de descripciones de la Home/Biblioteca de Mazos/Archivo Personal y reformulación de supuestos tácticos.
-  - Cero modificaciones de código funcional (Python, HTML, CSS, JS, modelos, views, urls, settings, tests, migraciones) y cero dependencias externas.
-  - Respaldo de SQLite local ejecutado y verificado. Suite completa de 163 tests pasando en verde. Documentado en `docs/P1_3A_EDITORIAL_FOUNDATION.md`.
+  - Carga en producción ejecutada vía management command determinista e idempotente (`load_p1_3a_editorial_content`) con `transaction.atomic()` y validación previa en `--dry-run`.
+  - Cero modificaciones de código funcional previo, cero dependencias externas y cero alteración de la base de datos de producción existente (se conservan intactos los usuarios, cartas, printings y mazos).
+  - Respaldo de SQLite de producción verificado y HSTS en 3600s preservado. Documentado en `docs/P1_3A_CONTROLLED_EDITORIAL_PRODUCTION_DEPLOYMENT.md`.
+
 
 
 ---
