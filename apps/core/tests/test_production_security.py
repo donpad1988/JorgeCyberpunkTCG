@@ -58,3 +58,37 @@ class ProductionSecuritySettingsTests(SimpleTestCase):
 
     def test_production_hsts_preload_is_false(self):
         self.assertIs(self.prod_settings.SECURE_HSTS_PRELOAD, False)
+
+    def test_production_secure_proxy_ssl_header_is_configured(self):
+        self.assertEqual(
+            self.prod_settings.SECURE_PROXY_SSL_HEADER,
+            ("HTTP_X_FORWARDED_PROTO", "https"),
+        )
+
+    def test_production_secure_referrer_policy_is_same_origin(self):
+        self.assertEqual(
+            self.prod_settings.SECURE_REFERRER_POLICY,
+            "same-origin",
+        )
+
+
+class DevelopmentSecuritySettingsTests(SimpleTestCase):
+    """
+    Regression test suite to ensure local development settings in config.settings.development
+    do not accidentally force HTTPS redirect, HSTS, or secure cookies in local environment.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.dev_settings = importlib.import_module("config.settings.development")
+
+    def test_development_debug_is_true(self):
+        self.assertIs(self.dev_settings.DEBUG, True)
+
+    def test_development_ssl_redirect_is_not_forced(self):
+        self.assertFalse(getattr(self.dev_settings, "SECURE_SSL_REDIRECT", False))
+
+    def test_development_hsts_seconds_is_not_forced(self):
+        self.assertEqual(getattr(self.dev_settings, "SECURE_HSTS_SECONDS", 0), 0)
+

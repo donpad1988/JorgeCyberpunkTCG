@@ -137,14 +137,20 @@ Las fases funcionales originales **Fase 8 (Herramientas)**, **Fase 9 (Comunidad)
   - Integrity check exitoso (`VERIFICATION SUCCESSFUL: ok`) y simulación controlada de recuperación efectuada en `/tmp/` sin alterar la base de datos activa ni sus permisos.
   - Servido como prerrequisito pre-deploy seguro para el despliegue exitoso del bloque P0.2 en producción.
 
-* **P0.4 — Production Security Hardening**: `COMPLETADO — VALIDADO EN PRODUCCIÓN`
+* **P0.4 — Production Security Hardening Audit**: `COMPLETADA`
   - Auditoría de seguridad realizada confirmando que `security.W004` (HSTS desactivado) era el único warning inicial de `check --deploy`.
-  - Activación inicial y conservadora de HSTS configurada en `config/settings/production.py` con `SECURE_HSTS_SECONDS = 3600` (max-age 1 hora).
+  - Formulación del plan de endurecimiento progresivo de HSTS, proxy SSL y política de referente.
+
+* **P0.4B — Production Security Hardening Implementation**: `COMPLETADA (Local) — PREPARADO PARA DESPLIEGUE CONTROLADO`
+  - Activación conservadora de HSTS configurada en `config/settings/production.py` con `SECURE_HSTS_SECONDS = 3600` (max-age 1 hora, configurable vía entorno `DJANGO_SECURE_HSTS_SECONDS`).
   - Mantención explícita de `SECURE_HSTS_INCLUDE_SUBDOMAINS = False` y `SECURE_HSTS_PRELOAD = False`.
-  - Diferimiento de `SECURE_PROXY_SSL_HEADER` y `SECURE_REFERRER_POLICY` para validaciones independientes de infraestructura.
-  - Batería de 9 tests de regresión de seguridad de producción añadida en `apps/core/tests/test_production_security.py` (total de 158 tests pasando).
+  - Configuración del encabezado de proxy SSL (`SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")`).
+  - Definición de Referrer Policy (`SECURE_REFERRER_POLICY = "same-origin"`).
+  - Aislamiento completo de desarrollo local (`http://127.0.0.1:8000/`) manteniéndolo libre de redirección SSL u HSTS.
+  - Batería de tests de regresión de seguridad ampliada a 161 tests en `apps/core/tests/test_production_security.py`.
   - Manual operacional y evidencia de validación documentados en `docs/P0_4_PRODUCTION_SECURITY_HARDENING.md`.
-  - **Validado en producción en PythonAnywhere el 2026-09-04**: Cabecera `Strict-Transport-Security: max-age=3600` verificada en vivo en HTTP 200 OK con `curl -I`, redirección HTTP 301 a HTTPS funcional y log de errores sin incidencias.
+  - Siguiente macro-objetivo prelaunch previsto: **P1 — Prelaunch Readiness** (tras validación del despliegue en PythonAnywhere).
+
 
 ---
 
