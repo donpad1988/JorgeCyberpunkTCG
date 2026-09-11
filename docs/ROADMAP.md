@@ -155,11 +155,18 @@ Las fases funcionales originales **Fase 8 (Herramientas)**, **Fase 9 (Comunidad)
   - Auditoría técnica integral de preparación prelaunch efectuada (evaluación de inventario público/autenticado, user journeys, content readiness, UX/UI, accesibilidad, SEO, seguridad funcional, estados vacíos, datos y base de datos).
   - Decisión obtenida: `GO CON CONDICIONES` (Pre-lanzamiento técnico sólido; backlog priorizado en `docs/P1_0_PRELAUNCH_READINESS_AUDIT.md`).
 
-* **P1.1 — Responsive Footer Hardening**: `COMPLETADA LOCALMENTE — PENDIENTE DE DESPLIEGUE`
+* **P1.1 — Responsive Footer Hardening**: `COMPLETADA Y VALIDADA EN PRODUCCIÓN`
   - Resolución del hallazgo P1 de P1.0 relativo al comportamiento del footer en viewports ultra-estrechos (<360px).
   - Inclusión de regla media query `@media(max-width:360px)` en `static/css/components.css` optimizando paddings, gaps y fuentes monospace del footer.
   - Verificación responsive superada en matriz completa de viewports (320px, 360px, 375px, 390px, 768px, 1024px, 1440px) sin overflow horizontal.
-  - 163 tests pasando en verde. Pendiente de revisión y despliegue controlado.
+  - Commit `ddfc5ed` desplegado y validado exitosamente en producción en PythonAnywhere sin alterar HSTS (permanece en 3600 segundos).
+  - 163 tests pasando en verde.
+
+* **P1.2 — Prelaunch Content & Product Readiness Audit**: `COMPLETADA`
+  - Auditoría de preparación de contenido y coherencia de producto efectuada sin modificar código funcional ni escribir en la base de datos (BD en solo lectura).
+  - Inventario cuantitativo obtenido: 0 Guías, 0 Estrategias, 0 Videos, 4 Cartas en Choomdex (1 set), 0 Mazos públicos (1 mazo privado borrador) y 3 Usuarios agregados.
+  - Decisión obtenida: `GO CON CONDICIONES` (Infraestructura técnica, UX y seguridad sólidas; requiere publicación de volumen mínimo editorial de 2 guías, 1 estrategia, 1 mazo público y 1 video antes de ampliar pruebas con usuarios externos). Documentado en `docs/P1_2_PRELAUNCH_CONTENT_PRODUCT_READINESS_AUDIT.md`.
+
 
 
 
