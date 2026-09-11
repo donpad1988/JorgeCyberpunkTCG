@@ -167,11 +167,14 @@ Las fases funcionales originales **Fase 8 (Herramientas)**, **Fase 9 (Comunidad)
   - Inventario cuantitativo obtenido: 0 Guías, 0 Estrategias, 0 Videos, 4 Cartas en Choomdex (1 set), 0 Mazos públicos (1 mazo privado borrador) y 3 Usuarios agregados.
   - Decisión obtenida: `GO CON CONDICIONES` (Infraestructura técnica, UX y seguridad sólidas; requiere publicación de volumen mínimo editorial de 2 guías, 1 estrategia, 1 mazo público y 1 video antes de ampliar pruebas con usuarios externos). Documentado en `docs/P1_2_PRELAUNCH_CONTENT_PRODUCT_READINESS_AUDIT.md`.
 
-
-
-
+* **P1.3A — Editorial Foundation**: `COMPLETADA LOCALMENTE — PENDIENTE DE DESPLIEGUE EDITORIAL`
+  - Publicación local controlada de la fundación editorial mínima prelaunch: exactamente 2 Guías ("Bienvenido a JorgeCyberpunkTCG", "Cómo usar tu Cyberdeck: Choomdex, cartas y mazos") y 1 Estrategia ("Antes de construir: define el propósito de tu mazo").
+  - Contenido totalmente original en español, táctico y fundamentado exclusivamente en la documentación e infraestructura técnica interna del repositorio. Cero reglas no verificadas, cero claims de metajuego, winrates o afiliación oficial.
+  - Cero modificaciones de código funcional (Python, HTML, CSS, JS, modelos, views, urls, settings, tests, migraciones).
+  - Respaldo de SQLite local ejecutado y verificado. Suite completa de 163 tests pasando en verde. Documentado en `docs/P1_3A_EDITORIAL_FOUNDATION.md`.
 
 ---
+
 
 ## Cuadro de Resumen del Roadmap Maestro
 
