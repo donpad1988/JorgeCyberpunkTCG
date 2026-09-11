@@ -21,7 +21,7 @@ La fuente de datos para `title`, `summary`, `body`, `article_type`, `category_sl
   - Si una categoría o artículo no existe: `CREATE`.
   - Si existe y coincide exactamente en todos sus campos clave: `EXISTS` (no se modifica nada).
   - Si existe pero difiere en algún campo: `CONFLICT` (aborta inmediatamente sin alterar registros).
-- **Autor**: Resuelto de forma estable mediante `User.objects.get(username="jorgecyberpunktcg")`.
+- **Autor**: Resuelto de forma estable y case-insensitive mediante `User.objects.filter(username__iexact="jorgecyberpunktcg")` (resuelve `JORGECYBERPUNKTCG` o `jorgecyberpunktcg`). Aborta si no hay coincidencia o existen múltiples coincidencias.
 - **Soporte Dry-Run**: Flag `--dry-run` para pre-validación sin persistencia de datos.
 
 ## Pruebas Automáticas del Cargador

@@ -172,11 +172,16 @@ class Command(BaseCommand):
 
         User = get_user_model()
         author_username = "jorgecyberpunktcg"
-        try:
-            author = User.objects.get(username=author_username)
-        except User.DoesNotExist:
+        matching_authors = User.objects.filter(username__iexact=author_username)
+        if matching_authors.count() == 1:
+            author = matching_authors.first()
+        elif matching_authors.count() == 0:
             raise CommandError(
                 f"Author user '{author_username}' does not exist in the target database. Aborting."
+            )
+        else:
+            raise CommandError(
+                f"Multiple users matching '{author_username}' found in the target database. Aborting."
             )
 
         summary_report = []
@@ -226,12 +231,13 @@ class Command(BaseCommand):
                             existing.title == art_data["title"]
                             and existing.article_type == art_data["article_type"]
                             and existing.category.slug == cat_slug
-                            and existing.author.username == author.username
+                            and (existing.author == author or existing.author.username.lower() == author.username.lower())
                             and existing.summary == art_data["summary"]
                             and existing.body == art_data["body"]
                             and existing.status == art_data["status"]
                         ):
                             summary_report.append(f"Article '{slug}': EXISTS")
+
                         else:
                             has_conflict = True
                             summary_report.append(f"Article '{slug}': CONFLICT (data differs)")

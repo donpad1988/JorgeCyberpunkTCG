@@ -1,4 +1,6 @@
 from io import StringIO
+from unittest.mock import patch
+
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
 from django.core.management.base import CommandError
@@ -43,6 +45,36 @@ class LoadP13AEditorialContentCommandTest(TestCase):
         self.assertIn("Article 'bienvenido-a-jorgecyberpunktcg': EXISTS", out.getvalue())
         self.assertIn("Article 'como-usar-tu-cyberdeck': EXISTS", out.getvalue())
         self.assertIn("Article 'antes-de-construir-define-el-proposito-de-tu-mazo': EXISTS", out.getvalue())
+
+    def test_case_insensitive_author_resolution_uppercase_username(self):
+        self.author.username = "JORGECYBERPUNKTCG"
+        self.author.save()
+
+        out = StringIO()
+        call_command("load_p1_3a_editorial_content", stdout=out)
+
+        self.assertEqual(ContentCategory.objects.count(), 2)
+        self.assertEqual(Article.objects.count(), 3)
+        self.assertEqual(User.objects.count(), 1)
+        for article in Article.objects.all():
+            self.assertEqual(article.author.username, "JORGECYBERPUNKTCG")
+
+        # Verify idempotency on uppercase username
+        out_second = StringIO()
+        call_command("load_p1_3a_editorial_content", stdout=out_second)
+        self.assertIn("Article 'bienvenido-a-jorgecyberpunktcg': EXISTS", out_second.getvalue())
+
+    def test_multiple_matching_authors_aborts_command(self):
+        user2 = User(username="JorgeCyberpunkTCG_dup", email="dup@gmail.com")
+        user2.save()
+
+        # Mock filter to simulate multiple matches for username__iexact
+        with patch.object(User.objects, "filter") as mock_filter:
+            mock_filter.return_value.count.return_value = 2
+            err = StringIO()
+            with self.assertRaises(CommandError) as ctx:
+                call_command("load_p1_3a_editorial_content", stderr=err)
+            self.assertIn("Multiple users matching 'jorgecyberpunktcg' found", str(ctx.exception))
 
     def test_dry_run_does_not_persist_records(self):
         out = StringIO()
